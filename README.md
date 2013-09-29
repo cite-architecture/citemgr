@@ -19,7 +19,9 @@ all services conifgured in a given configuration file, you can use
     gradle -Pconf=FILENAME ttl
     
 
-
+Output in `build/ttl` will include individual TTL files for each service, and a composite
+file `all.ttl` with appropriate `@prefix` statements so it can be directly loaded into
+an RDF triple store.
 
 
 
