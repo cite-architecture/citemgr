@@ -1,0 +1,5 @@
+ext {
+
+    tokenEdition = [["urn", "extension", "tokenizer"], ["urn2","extension","tokenizer"]]
+
+}

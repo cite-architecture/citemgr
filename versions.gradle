@@ -1,0 +1,17 @@
+
+project.ext {
+    groovyVersion = "2.0.6"
+    junitVersion = "4.8.2"
+    jingVersion = "20091111"
+    saxonVersion = "8.7"
+
+    greekutilsVersion = "0.8.5"
+
+    nysiVersion = "0.1.12"
+    abracadabraVersion = "0.1.5"
+    prestochangoVersion = "0.2.7"
+    hocuspocusVersion = "0.8.6"
+
+    citeVersion = "0.14.1"
+
+}

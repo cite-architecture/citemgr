@@ -1,0 +1,8 @@
+/* Settings required for publication to nexus repository
+*/
+
+project.ext {
+    nexusUser = ""
+    nexusPassword = ""
+    nexusRepo = ""
+}
