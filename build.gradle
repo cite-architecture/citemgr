@@ -86,7 +86,7 @@ dependencies {
 task checkti(type: JavaExec, dependsOn: compileGroovy) {
     description = "Verifies contents of configured text inventory"
     
-    main = "org.homermultitext.dse.TIVerifier"
+    main = "org.homermultitext.citemanager.TIVerifier"
     args = ["${ctsinventory}"]
 
     classpath sourceSets.main.output.classesDir
@@ -118,7 +118,7 @@ task checkimginv() {
 task tokenize(type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates tabular token file for text corpus"
 
-    main = "org.homermultitext.dse.TextTokenizer"
+    main = "org.homermultitext.citemanager.TextTokenizer"
     args = ["${tokenSystem}", ctsinventory, ctsarchive, "${buildDir}/tokenization"]
 
     classpath sourceSets.main.output.classesDir
@@ -128,7 +128,7 @@ task tokenize(type: JavaExec, dependsOn: compileGroovy) {
 task tokensTtl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Creates RDF (ttl) representation of tokenization of corpus"
 
-    main = "org.homermultitext.dse.TextTokenizer"
+    main = "org.homermultitext.citemanager.TextTokenizer"
     args = ["${tokenSystem}", ctsinventory, ctsarchive, "${buildDir}/tokenization"]
 
     classpath sourceSets.main.output.classesDir
@@ -139,7 +139,7 @@ task tokensTtl (type: JavaExec, dependsOn: compileGroovy) {
 task tokenEditions (type: JavaExec, dependsOn: tokenize) {
     description = "Creates tabular representation of token edition"
 
-    main = "org.homermultitext.dse.EditionGenerator"
+    main = "org.homermultitext.citemanager.EditionGenerator"
     args = ["${tokensFile}", "${buildDir}/tokenEditions"]
 
     classpath sourceSets.main.output.classesDir
@@ -156,7 +156,7 @@ task t2(dependsOn: compileGroovy) {
             def stngs = it
             System.err.println "Create tokenized edition for settings " + stngs
             javaexec {
-                main = 'org.homermultitext.dse.TokenEditionGenerator'
+                main = 'org.homermultitext.citemanager.TokenEditionGenerator'
                 args = ["${stngs[0]}", "${stngs[1]}", "${stngs[2]}", ctsinventory, ctsarchive, "${buildDir}/tokeneditions"]
                 classpath sourceSets.main.output.classesDir
                 classpath configurations.runtime
@@ -171,7 +171,7 @@ task t2(dependsOn: compileGroovy) {
 task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
      description = "Generates TTL statements about text contents"
 
-    main = "org.homermultitext.dse.HocusPocusTurtleizer"
+    main = "org.homermultitext.citemanager.HocusPocusTurtleizer"
     args = ["${ctsinventory}", "${ctsarchive}", "${buildDir}/ttl", "cts.ttl", "${prefix}"]
 
     classpath sourceSets.main.output.classesDir
@@ -182,7 +182,7 @@ task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
 
 task imgttl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates RDF for configured NYSI"
-    main = "org.homermultitext.dse.NysiTurtleizer"
+    main = "org.homermultitext.citemanager.NysiTurtleizer"
     args = ["${imgcolldir}", "${imgdatadir}", "${buildDir}/ttl", "citeimgs.ttl", "${prefix}"]
 
     classpath sourceSets.main.output.classesDir
@@ -195,7 +195,7 @@ task imgttl (type: JavaExec, dependsOn: compileGroovy) {
 
 task ccttl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates RDF for Collections configured for prestochango"
-    main = "org.homermultitext.dse.PrestochangoTurtleizer"
+    main = "org.homermultitext.citemanager.PrestochangoTurtleizer"
     args = ["${collinv}", "${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
 
     classpath sourceSets.main.output.classesDir
@@ -206,7 +206,7 @@ task ccttl (type: JavaExec, dependsOn: compileGroovy) {
 
 task idxttl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates RDF for indices configured for abracadabra"
-    main = "org.homermultitext.dse.AbracadabraTurtleizer"
+    main = "org.homermultitext.citemanager.AbracadabraTurtleizer"
     args = ["${idxinv}", "${idxarchive}", "${buildDir}/ttl", "indices.ttl", "${prefix}"]
 
     classpath sourceSets.main.output.classesDir
