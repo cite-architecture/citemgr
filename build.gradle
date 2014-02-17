@@ -64,7 +64,7 @@ configurations {
 }
 
 dependencies {
-    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
 
     compile group: 'edu.holycross.shot', name: 'nysi', version: nysiVersion
     compile group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion

@@ -30,6 +30,18 @@ class HocusPocusTurtleizer {
 
             corpus = new Corpus(inventoryFile, archiveDir)
 
+	    if (!corpus.filesAndInventoryMatch()) {
+	      System.err.println "HPTurtleizer: files and inventory do not match."
+	      System.err.println "Files in inventory: " 
+	      corpus.filesInInventory().each { f ->
+		System.err.println "\t" + f
+	      }
+	      System.err.println "Files in disk archive: "
+	      corpus.filesInArchive().each { f ->
+		System.err.println "\t" + f
+	      }
+	    }
+
         } catch (Exception e) {
             throw new Exception ("HocusPocusTurtelizer: unable to create Corpus from inventory ${inventoryFile} for archive ${archiveDir}: ${e}")
         }
@@ -37,7 +49,7 @@ class HocusPocusTurtleizer {
 
 
     /** 
-    * main() method expects three arguments: a writable output file name,
+    * main() method expects arguments: 
     * 
     */
     public static void main(String[] args)  {
