@@ -38,7 +38,7 @@ class TokenEditionGenerator {
 
         def tokenSystem = Class.forName(tokenizerClassName).newInstance()
 
-        EditionGenerator eg = new EditionGenerator()
+/*        EditionGenerator eg = new EditionGenerator()
         outDir.eachFileMatch(~/.*.txt/) { tabFile ->  
             System.out.println "Now tokenize tab file ${tabFile}"
             ArrayList tokens = tokenSystem.tokenize(tabFile,sepChar )
@@ -46,7 +46,7 @@ class TokenEditionGenerator {
             eg.generateEdition(tokens,outDir,"${urn.getTextGroup()}_${urn.getWork()}_${extension}.ttl", extension, ti)
 
         }
-
+*/
     }
 
 

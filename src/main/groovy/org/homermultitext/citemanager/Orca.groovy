@@ -65,11 +65,11 @@ class Orca {
 
 
   /** Name of file with tabular representation of tokenized edition. */
-  String tokenEditionName = "tokenedition.txt"
+  String digitalExemplarName = "digitalExemplar.txt"
 
   /** Name of file with TTL statements mapping tokenized edition nodes
    * to node of source edition. */
-  String tokenIndexName = "tokenToSourceEdition.ttl"
+  String exemplarTtlName = "exemplar.ttl"
 
 
   String getUrnName() {
@@ -93,8 +93,8 @@ class Orca {
 
 
   void generate(File inputFile, String separatorStr, File outputDirectory, String outputFileName) {
-    this.tokenEditionName = "${outputFileName}-tokenEdition.txt"
-    this.tokenIndexName = "${outputFileName}-tokenToSrcIndex.ttl"
+    this.digitalExemplarName = "${outputFileName}-tokenEdition.txt"
+    this.exemplarTtlName = "${outputFileName}-tokenToSrcIndex.ttl"
     generate(inputFile, separatorStr, outputDirectory)
   }
 
@@ -115,8 +115,8 @@ class Orca {
     if (debug > 0) {
       System.err.println "Orca:generate:  input ${inputFile}"
     }
-    File outFile = new File(outputDirectory, tokenEditionName)
-    File idxFile = new File(outputDirectory, tokenIndexName)
+    File outFile = new File(outputDirectory, digitalExemplarName)
+    File idxFile = new File(outputDirectory, exemplarTtlName)
 
     Integer count = 0  
     Integer prevCount = 0
@@ -167,8 +167,8 @@ class Orca {
 	
 
 	if (count > 1) {
-	  idxFile.append("${prevSrc} hmt:derivesTo ${prevUrn}.${prevCount} .\n")
-	  idxFile.append("${prevUrn}.${prevCount} hmt:derivedFrom ${prevSrc}.\n")
+	  idxFile.append("<${prevSrc}> hmt:analyzesAs <${prevUrn}.${prevCount}> .\n")
+	  idxFile.append("<${prevUrn}.${prevCount}> hmt:analyzedFrom <${prevSrc}>.\n")
 
 	  if (prevPrevCount == 0) {
 	    //kludge.append ("Appending ${prevText}\n", "UTF-8")
@@ -188,8 +188,8 @@ class Orca {
       } 
     }
     
-    idxFile.append("${prevSrc} hmt:derivesTo ${prevUrn}.${prevCount} .\n")
-    idxFile.append("${prevUrn}.${prevCount} hmt:derivedFrom ${prevSrc}.\n")
+    idxFile.append("<${prevSrc}> hmt:analyzesAs <${prevUrn}.${prevCount}> .\n")
+    idxFile.append("<${prevUrn}.${prevCount}> hmt:analyzedFrom <${prevSrc}> .\n")
 
     //kludge.append ("Tack on ${prevText} followed by EOL\n", "UTF-8")      
 

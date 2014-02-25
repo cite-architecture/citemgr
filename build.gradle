@@ -48,7 +48,7 @@ if (hasProperty('conf')) {
 
 
 group = "org.homermultitext"
-version = '0.3.2'
+version = '0.3.3'
 
 
 repositories {
@@ -61,6 +61,7 @@ repositories {
 
 configurations {
   rdf
+  lib
 }
 
 dependencies {
@@ -292,6 +293,7 @@ task zipTtl(type: Zip, dependsOn: [ttl]) {
 
 artifacts {
   rdf zipTtl
+  lib jar
 }
 
 
@@ -313,3 +315,13 @@ task cleanTest () {
 
 test.dependsOn cleanTest
 
+uploadLib {
+  repositories.mavenDeployer {
+    repository(url: nexusRepo) {                   
+      authentication (userName: nexusUser, password: nexusPassword)
+    }
+  }
+  doLast {
+    System.err.println "Code library uploaded."
+  }
+}
