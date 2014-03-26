@@ -179,9 +179,12 @@ task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
 
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
-
 }
 
+ctsttl.doFirst {
+  System.err.println "ctsttl will use inventory ${ctsinventory}"
+  System.err.println "and archive ${ctsarchive}"
+}
 
 task imgttl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates RDF for configured NYSI"
@@ -221,8 +224,7 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
     doLast {
         String charEnc = "UTF-8"
 	String prefix = "${prefixString}"
-//        String prefix = "@prefix cts:        <http://www.homermultitext.org/cts/rdf/> .\n@prefix cite:        <http://www.homermultitext.org/cite/rdf/> .\n@prefix hmt:        <http://www.homermultitext.org/hmt/rdf/> .\n@prefix citedata:        <http://www.homermultitext.org/hmt/citedata/> .\n@prefix dcterms: <http://purl.org/dc/terms/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. \n@prefix  xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix olo:     <http://purl.org/ontology/olo/core#> .\n@prefix lex:        <http://data.perseus.org/rdfverbs/> .\n@prefix pal: <http://shot.holycrossedu/rdfverbs/pal/> .\n@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix latepig: <http://shot.holycross.edu/rdf/latepig/> .\n\n"
-        
+
         File ctsttl = new File("${buildDir}/ttl/cts.ttl")
         File collectionsttl = new File("${buildDir}/ttl/collections.ttl")
         File idxttl = new File("${buildDir}/ttl/indices.ttl")

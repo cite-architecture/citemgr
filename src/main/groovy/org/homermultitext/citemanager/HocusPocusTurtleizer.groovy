@@ -53,8 +53,6 @@ class HocusPocusTurtleizer {
     * 
     */
     public static void main(String[] args)  {
-
-
         boolean runIt = true
         
         String invFileName = args[0]
@@ -74,6 +72,7 @@ class HocusPocusTurtleizer {
                 outFile = new File(outputDir, args[3])
                 inventory = new File(invFileName)
                 archiveDir = new File(archiveName)
+
             } catch (Exception e) {
                 System.err.println "HocusPocusTurteizer: unable to create files: ${e} " 
                 runIt = false
@@ -93,12 +92,10 @@ class HocusPocusTurtleizer {
                 runIt = false
             }
 
-
             if (! archiveDir.canRead()) {
                 System.err.println "HocusPocusTurtelizer main: cannot read archive directory ${archiveDir}"
                 runIt = false
             }
-
 
             boolean prefix
             switch (args[4]) {
