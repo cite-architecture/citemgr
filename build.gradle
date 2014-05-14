@@ -117,7 +117,7 @@ task checkimginv() {
     }
 }
 
-
+/*
 task tokenize(type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates tabular token file for text corpus"
 
@@ -137,6 +137,7 @@ task tokensTtl (type: JavaExec, dependsOn: compileGroovy) {
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
 }
+*/
 
 /*
 task tokenEditions (type: JavaExec, dependsOn: tokenize) {
@@ -151,6 +152,7 @@ task tokenEditions (type: JavaExec, dependsOn: tokenize) {
 }
 */
 
+/*
 task t2(dependsOn: compileGroovy) {
     description = "Test tokenizing from configuration"
 
@@ -168,6 +170,7 @@ task t2(dependsOn: compileGroovy) {
         }
     }
 }
+*/
 
 
 
