@@ -117,62 +117,6 @@ task checkimginv() {
     }
 }
 
-/*
-task tokenize(type: JavaExec, dependsOn: compileGroovy) {
-    description = "Generates tabular token file for text corpus"
-
-    main = "org.homermultitext.citemanager.TextTokenizer"
-    args = ["${tokenSystem}", ctsinventory, ctsarchive, "${buildDir}/tokenization"]
-
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
-}
-
-task tokensTtl (type: JavaExec, dependsOn: compileGroovy) {
-    description = "Creates RDF (ttl) representation of tokenization of corpus"
-
-    main = "org.homermultitext.citemanager.TextTokenizer"
-    args = ["${tokenSystem}", ctsinventory, ctsarchive, "${buildDir}/tokenization"]
-
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
-}
-*/
-
-/*
-task tokenEditions (type: JavaExec, dependsOn: tokenize) {
-    description = "Creates tabular representation of token edition"
-
-    main = "org.homermultitext.citemanager.EditionGenerator"
-    args = ["${tokensFile}", "${buildDir}/tokenEditions"]
-
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
-    
-}
-*/
-
-/*
-task t2(dependsOn: compileGroovy) {
-    description = "Test tokenizing from configuration"
-
-    doLast {
-        tokenEditions.each {
-            def stngs = it
-            System.err.println "Create tokenized edition for settings " + stngs
-            javaexec {
-                main = 'org.homermultitext.citemanager.TokenEditionGenerator'
-                args = ["${stngs[0]}", "${stngs[1]}", "${stngs[2]}", ctsinventory, ctsarchive, "${buildDir}/tokeneditions"]
-                classpath sourceSets.main.output.classesDir
-                classpath configurations.runtime
-                
-            }
-        }
-    }
-}
-*/
-
-
 
 task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
      description = "Generates TTL statements about text contents"
