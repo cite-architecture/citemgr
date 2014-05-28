@@ -16,10 +16,13 @@ class DseManager {
 
   Integer debug = 1
 
-  ArrayList indexFiles
-  Corpus ctsCorpus
-  CollectionArchive citeColl
+
+
+  ArrayList tbsImageIndexFiles
+  ArrayList textImageIndexFiles
+
   
+  Corpus ctsCorpus
 
   DseManager()   {
   }
@@ -34,7 +37,24 @@ class DseManager {
 
 
 
-  /** Finds a default image for a requested
+
+  CiteUrn imageForTbs(String urnStr) {
+    try {
+      CiteUrn u = new CiteUrn(urnStr)
+      return imageForTbs(u)
+    } catch (Exception e) {
+      throw e
+    }
+  }
+
+
+  /** Searches all index files for a default image
+   * for a requested text-bearing surface.
+   */
+  CiteUrn imageForTbs(CiteUrn urn) {
+  }
+
+  /** Looks in an index file for a default image for a requested
    * text-bearing surface.
    * @param urn URN value for the text-bearing surface, as a String.
    * @returns A CITE URN identifying the default image.
@@ -51,7 +71,8 @@ class DseManager {
   }
 
 
-  /** Finds a default image for a requested
+
+  /** Looks in an index ffile for a default image for a requested
    * text-bearing surface.
    * @param urn The text-bearing surface.
    * @returns A CITE URN identifying the default image, or null
