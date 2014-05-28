@@ -10,18 +10,6 @@ project.ext {
     // Path to directory where XML editions are found:
     ctsarchive = ""
 
-    // Name of hocuspocus tokenization system to use
-    // (fully qualified class name)
-    tokenSystem = "edu.holycross.shot.hocuspocus.DefaultTokenizationSystem"
-
-
-    
-    tokenEditions = [] 
-
-    //Example:
-    // tokenEditions = [["urn", "extension", "tokenizer"], ["urn2","extension","tokenizer"]]    
-
-
     // 2. Configuration of image repository.
     // Path to directory with csv files defining image collections
     imgcolldir = ""
