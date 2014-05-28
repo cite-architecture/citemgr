@@ -1,0 +1,9 @@
+
+/* Configuration of standard Digital Scholarly Editing settings */
+
+project.ext {
+  // comma-separated list of file names within indices dir:
+  tbsDefaultImage = "scholiaToImgIndex.tsv, scholiaToImgIndex-e3.tsv"
+  // comma-separated list of file names within indices dir:
+  imageTextIndices = "linesToImage-4.csv, linesToImage-7.csv, linesToImage-9.csv"
+}

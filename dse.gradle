@@ -1,0 +1,21 @@
+
+/* Configuration of data settings for standard Digital Scholarly Editing archive.
+
+Text-bearing surfaces are indexed to a default image (optionally with RoI).
+Citable nodes of text are indexed to images (normally with RoIs).
+
+Relations of text  nodes to text-bearing surface can be inferred from these two
+indexed relations.
+
+*/
+
+project.ext {
+  // comma-separated list of file names within indices 
+  // indexing text-bearing surfaces to a default image
+  tbsDefaultImage = ""
+
+  // comma-separated list of one or more file names within indices dir
+  // indexing text leaf nodes to image RoIs
+  imageTextIndices = ""
+  
+}

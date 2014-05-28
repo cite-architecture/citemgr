@@ -10,6 +10,12 @@ if (! hasProperty('prefix')) {
     apply from: "options.gradle"
 }
 
+/* Settings for Digital Scholarly Edition data */
+if (hasProperty('dse')) {
+    apply from: dse
+}
+
+
 if (hasProperty('pub')) {
     System.err.print "Using publication configuration from ${pub}"
     File confFile = new File(pub)
