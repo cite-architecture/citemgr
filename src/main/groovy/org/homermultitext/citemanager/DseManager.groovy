@@ -25,17 +25,26 @@ class DseManager {
   }
 
 
+
+
+  boolean verifyTbs(String urnStr) {
+  }
+  boolean verifyTbs(CiteUrn urn) {
+  }
+
+
+
   /** Finds a default image for a requested
    * text-bearing surface.
    * @param urn URN value for the text-bearing surface, as a String.
    * @returns A CITE URN identifying the default image.
    * @throws Exception if urnStr is not a valid CITE URN.
    */
-  CiteUrn imageForTbs(String urnStr) 
+  CiteUrn imageForTbs(String urnStr, File indexFile) 
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
-      return imageForTbs(u)
+      return imageForTbs(u, indexFile)
     } catch (Exception e) {
       throw e
     }
@@ -45,13 +54,34 @@ class DseManager {
   /** Finds a default image for a requested
    * text-bearing surface.
    * @param urn The text-bearing surface.
-   * @returns A CITE URN identifying the default image.
+   * @returns A CITE URN identifying the default image, or null
+   * if none found.
+   * @throws Exception if no index files defined, or
+   * if multiple default images found.
    */
-  CiteUrn imageForTbs(CiteUrn urn) {
+  CiteUrn imageForTbs(CiteUrn urn, File indexFile) 
+  throws Exception {
+    def lines = indexFile.readLines()
+    def indexRecord = lines.grep( ~/^.+${urn}"?,.+$/ ) 
+
+    switch (indexRecord.size()) {
+    case 0:
+
+    return null
+    break
+
+    case 1:
+    String urnStr = indexRecord[0].replaceAll(/[^,]+,/,"").replaceAll(/"/,"")
+    CiteUrn imgUrn = new CiteUrn(urnStr)
+    return imgUrn
+    break
+    
+
+    default:
+    throw new Exception("DseManager:imageForTbs: found more than one default image for ${urn} in indexFile.")
+    break
+    }
+
   }
   
-  // find default image for a TBS
-  // 
-
-
 }
