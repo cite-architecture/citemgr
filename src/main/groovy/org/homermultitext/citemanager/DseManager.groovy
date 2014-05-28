@@ -31,11 +31,68 @@ class DseManager {
 
 
   boolean verifyTbs(String urnStr) {
+    try {
+      CiteUrn u = new CiteUrn(urnStr)
+      return verifyTbs(u)
+    } catch (Exception e) {
+      throw e
+    }
   }
+
+
+  /** Performs completes DSE validation for a given
+   * text-bearing surface.
+   * @param urn The text-bearing surface to validate.
+   * @returns True if all tests pass.
+   */
   boolean verifyTbs(CiteUrn urn) {
+    boolean valid = true
+    CiteUrn img = imageForTbs(urn)
+    if (! img) {
+      valid = false
+    }
+
+    // find text nodes for image
+    // find each text node in edition
+    return valid
   }
 
+  ArrayList textNodesForImage(String imgStr, File indexFile) 
+  throws Exception {
+    try {
+      CiteUrn u = new CiteUrn(imgStr)
+      return textNodesForImage(u, indexFile)
 
+    } catch (Exception e) {
+      throw e
+    }
+  }
+
+  ArrayList textNodesForImage(CiteUrn img, File indexFile) {
+
+    def lines = indexFile.readLines()
+    //    def indexRecord = lines.grep( ~/^.+${urn}"?,.+$/ ) 
+
+    switch (indexRecord.size()) {
+    case 0:
+
+    return null
+    break
+
+    case 1:
+    
+    //     String urnStr = indexRecord[0].replaceAll(/[^,]+,/,"").replaceAll(/"/,"")   
+    CiteUrn imgUrn = new CiteUrn(urnStr)
+    return imgUrn
+    break
+    
+
+    default:
+    throw new Exception("DseManager:imageForTbs: found more than one default image for ${urn} in indexFile.")
+    break
+
+    }
+  }
 
 
   CiteUrn imageForTbs(String urnStr) 
