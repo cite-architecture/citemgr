@@ -38,7 +38,8 @@ class DseManager {
 
 
 
-  CiteUrn imageForTbs(String urnStr) {
+  CiteUrn imageForTbs(String urnStr) 
+  throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
       return imageForTbs(u)
@@ -50,8 +51,27 @@ class DseManager {
 
   /** Searches all index files for a default image
    * for a requested text-bearing surface.
+   * @param urn The text-bearing surface to look for.
+   * @returns The URN of the default image, or null if none found.
+   * @throws Exception if indexes not configured.
    */
-  CiteUrn imageForTbs(CiteUrn urn) {
+  CiteUrn imageForTbs(CiteUrn urn) 
+  throws Exception {
+    
+    if ((! this.tbsImageIndexFiles) || (this.tbsImageIndexFiles.size() == 0)) {
+      throw new Exception ("DseManager:imageForTbs: no index files configured.")
+    }
+
+    CiteUrn defaultImage = null
+    this.tbsImageIndexFiles.each { f ->
+      CiteUrn imgUrn = this.imageForTbs(urn,f)
+      if (imgUrn != null) {
+       defaultImage = imgUrn
+      }
+
+    }
+
+    return defaultImage  
   }
 
   /** Looks in an index file for a default image for a requested

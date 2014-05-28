@@ -47,8 +47,7 @@ class TestDse extends GroovyTestCase {
     
     String folioUrnStr = "urn:cite:hmt:u4.193r"
     CiteUrn actualUrn = dsemgr.imageForTbs(folioUrnStr)
-
-    //    assert actualUrn.toString() == expectedUrn.toString()
+    assert actualUrn.toString() == expectedUrn.toString()
   }
 
 
