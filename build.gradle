@@ -149,7 +149,7 @@ task imgttl (type: JavaExec, dependsOn: compileGroovy) {
 task ccttl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates RDF for Collections configured for prestochango"
     main = "org.homermultitext.citemanager.PrestochangoTurtleizer"
-    args = ["${collinv}", "${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
+    args = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
 
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
@@ -225,6 +225,10 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 }
 
 
+
+task showProj() {
+  println "file://${projectDir}/${collectionInvUrl}"
+}
 
 uploadArchives {
     repositories.mavenDeployer {

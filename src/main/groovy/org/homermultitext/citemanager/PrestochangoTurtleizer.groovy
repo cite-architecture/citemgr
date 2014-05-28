@@ -75,6 +75,8 @@ class PrestochangoTurtleizer {
 	outDir.mkdir()
       }
 
+      System.err.println "SCHEMA: " + invSchema
+
       boolean prefix
       switch (args[4]) {
       case "t":
