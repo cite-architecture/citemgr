@@ -8,17 +8,12 @@ import edu.harvard.chs.cite.CiteUrn
 
 
 
-class TestDse extends GroovyTestCase {
+class TestDseImgForTbs extends GroovyTestCase {
 
 
   File dataDir = new File("testdata/dse")
   File imgTbsIndex = new File(dataDir,"folioToOverviewImage.csv")
   ArrayList indexFiles = [imgTbsIndex]  
-
-  @Test void testDse() {
-    DseManager dsemgr = new DseManager()
-    assert dsemgr
-  }
 
   @Test void testImgForTbs() {
     DseManager dsemgr = new DseManager()
