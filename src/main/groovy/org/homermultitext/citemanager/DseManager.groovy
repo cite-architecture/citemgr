@@ -29,11 +29,11 @@ class DseManager {
 
 
 
-
   boolean verifyTbs(String urnStr) {
     try {
       CiteUrn u = new CiteUrn(urnStr)
       return verifyTbs(u)
+
     } catch (Exception e) {
       throw e
     }
@@ -41,7 +41,13 @@ class DseManager {
 
 
   /** Performs completes DSE validation for a given
-   * text-bearing surface.
+   * text-bearing surface. That means
+   * all three edges of the DSE triangle:
+   *
+   * 1. image to TBS
+   * 2. text to TBS
+   * 3. text to image
+   * 
    * @param urn The text-bearing surface to validate.
    * @returns True if all tests pass.
    */
@@ -51,11 +57,42 @@ class DseManager {
     if (! img) {
       valid = false
     }
+    if (debug > 0) {
+      System.err.println "DseManager:verifyTbs: for ${urn}, image = ${img}"
+    }
 
-    // find text nodes for image
-    // find each text node in edition
+    // verify text nodes for image
+    // verify text nodes for tbs
     return valid
   }
+
+
+
+  //////////////// TRIO OF METHODS FOR TEXT -> SURFACE ////////////////
+
+  ArrayList textNodesForSurface(String imgStr, File indexFile)   
+  throws Exception {
+    try {
+      CiteUrn u = new CiteUrn(imgStr)
+      return textNodesForSurface(u, indexFile)
+
+    } catch (Exception e) {
+      throw e
+    }
+  }
+
+
+
+
+  //////////////// TRIO OF METHODS FOR TEXT -> IMAGE ////////////////
+
+
+  ArrayList textNodesForImage(String imgStr) {
+    // cycle all index files, and invoke
+    // textNodesForImage with file
+  }
+
+
 
   ArrayList textNodesForImage(String imgStr, File indexFile) 
   throws Exception {
@@ -69,7 +106,7 @@ class DseManager {
   }
 
   ArrayList textNodesForImage(CiteUrn img, File indexFile) {
-
+    /*
     def lines = indexFile.readLines()
     //    def indexRecord = lines.grep( ~/^.+${urn}"?,.+$/ ) 
 
@@ -92,9 +129,20 @@ class DseManager {
     break
 
     }
+    */
   }
 
 
+
+  //////////////// TRIO OF METHODS FOR IMAGE -> SURFACE ////////////////
+
+
+  /** Searches all index files for a default image
+   * for a requested text-bearing surface.
+   * @param urnStr URN value, as a String, of the text-bearing surface to look for.
+   * @returns The URN of the default image, or null if none found.
+   * @throws Exception if indexes not configured.
+   */
   CiteUrn imageForTbs(String urnStr) 
   throws Exception {
     try {
@@ -125,11 +173,10 @@ class DseManager {
       if (imgUrn != null) {
        defaultImage = imgUrn
       }
-
     }
-
     return defaultImage  
   }
+
 
   /** Looks in an index file for a default image for a requested
    * text-bearing surface.
