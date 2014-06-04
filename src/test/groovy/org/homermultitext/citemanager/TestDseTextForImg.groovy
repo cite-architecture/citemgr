@@ -15,15 +15,21 @@ class TestDseTextForImg extends GroovyTestCase {
   File imgTbsIndex = new File(dataDir,"linesToImage-4.csv")
   ArrayList indexFiles = [imgTbsIndex]  
 
-  @Test void testAllTbsIndices() {
+  @Test void testTextImageIndex() {
     DseManager dsemgr = new DseManager()
     dsemgr.textImageIndexFiles = indexFiles
     String imgStr = "urn:cite:hmt:vaimg.VA052RN-0053"    
 
-    //    def linesList = dsemgr.textNodesForImage(imgStr, dsemgr.textImageIndexFiles[0])
-    //    println linesList
+    def linesList = dsemgr.textNodesForImage(imgStr, dsemgr.textImageIndexFiles[0])
+    
+    def expectedSize = 25
+    assert linesList.size() == expectedSize
 
   }
+
+  @Test void testAllTextImageIndices() {
+  }
+
 
 
 }

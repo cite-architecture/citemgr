@@ -106,30 +106,19 @@ class DseManager {
   }
 
   ArrayList textNodesForImage(CiteUrn img, File indexFile) {
-    /*
-    def lines = indexFile.readLines()
-    //    def indexRecord = lines.grep( ~/^.+${urn}"?,.+$/ ) 
+    def results = []
 
-    switch (indexRecord.size()) {
-    case 0:
-
-    return null
-    break
-
-    case 1:
-    
-    //     String urnStr = indexRecord[0].replaceAll(/[^,]+,/,"").replaceAll(/"/,"")   
-    CiteUrn imgUrn = new CiteUrn(urnStr)
-    return imgUrn
-    break
-    
-
-    default:
-    throw new Exception("DseManager:imageForTbs: found more than one default image for ${urn} in indexFile.")
-    break
-
+    def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
+    indexRecord.each { ln ->
+      String urnStr = ln.replaceFirst(/,.+/, '')
+      try {
+	CtsUrn urn = new CtsUrn(urnStr)
+	results.add(urnStr)
+      } catch (Exception e) {
+	System.err.println "DseManager:textNodesForImage: badly formed CTS URN ${urnStr}"
+      }
     }
-    */
+    return results
   }
 
 
