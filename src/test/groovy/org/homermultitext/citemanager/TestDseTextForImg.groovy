@@ -28,6 +28,7 @@ class TestDseTextForImg extends GroovyTestCase {
   }
 
   @Test void testAllTextImageIndices() {
+    assert 1
   }
 
 

@@ -20,7 +20,7 @@ class DseManager {
 
   ArrayList tbsImageIndexFiles
   ArrayList textImageIndexFiles
-
+  ArrayList textTbsIndexFiles
   
   Corpus ctsCorpus
 
@@ -53,15 +53,23 @@ class DseManager {
    */
   boolean verifyTbs(CiteUrn urn) {
     boolean valid = true
+
+    // Test that one default image is indexed to TBS:
     CiteUrn img = imageForTbs(urn)
     if (! img) {
       valid = false
     }
+
+    // verify text nodes for image by:
+    // collect all text nodes for TBS
+    // collect all text nodes for image
+    // should be set-identical
+
     if (debug > 0) {
-      System.err.println "DseManager:verifyTbs: for ${urn}, image = ${img}"
+      System.err.println "Text for Image:" + textNodesForImage(urn)
+      // System.err.println "Text for Tbs:"
     }
 
-    // verify text nodes for image
     // verify text nodes for tbs
     return valid
   }
@@ -90,6 +98,20 @@ class DseManager {
   ArrayList textNodesForImage(String imgStr) {
     // cycle all index files, and invoke
     // textNodesForImage with file
+    /*
+    if ((! this.tbsImageIndexFiles) || (this.tbsImageIndexFiles.size() == 0)) {
+      throw new Exception ("DseManager:imageForTbs: no index files configured.")
+    }
+
+    CiteUrn defaultImage = null
+    this.tbsImageIndexFiles.each { f ->
+      CiteUrn imgUrn = this.imageForTbs(urn,f)
+      if (imgUrn != null) {
+       defaultImage = imgUrn
+      }
+    }
+    return defaultImage  
+    */
   }
 
 
