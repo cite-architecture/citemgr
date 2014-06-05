@@ -12,14 +12,34 @@ class TestDseTextForTbs extends GroovyTestCase {
 
 
   File dataDir = new File("testdata/dse")
-  File imgTbsIndex = new File(dataDir,"linesToImage-4.csv")
-  ArrayList indexFiles = [imgTbsIndex]  
+  File txtTbsIndex = new File(dataDir,"venAIliad.csv")
+  ArrayList textTbsFiles = [txtTbsIndex]  
 
   @Test void testTextForTbs() {
     DseManager dsemgr = new DseManager()
-    //    def linesList = dsemgr.textNodesForImage(imgStr, dsemgr.textImageIndexFiles[0])
-    //    println linesList
+    dsemgr.textTbsIndexFiles = textTbsFiles
+    String folio = "urn:cite:hmt:msA.225r"
+    def linesList = dsemgr.textNodesForSurface(folio, dsemgr.textTbsIndexFiles[0])
+
+    Integer expectedSize = 25
+    assert linesList.size() == expectedSize
   }
+
+
+
+  @Test void testAllTextSurfaceIndices() {
+    DseManager dsemgr = new DseManager()
+    dsemgr.textTbsIndexFiles = textTbsFiles
+
+    String folio = "urn:cite:hmt:msA.225r"
+    def txtList = dsemgr.textNodesForSurface(folio)
+
+    Integer expectedSize = 25
+    assert txtList.size() == expectedSize
+    
+  }
+
+
 
 
 }

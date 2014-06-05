@@ -22,10 +22,16 @@ class TestDseValidator extends GroovyTestCase {
   ArrayList textImageFiles = [textImageIndex]
 
 
+  File textTbsIndex = new File(dataDir, "venAIliad.csv")
+  ArrayList textSurfaceFiles = [textTbsIndex]
+
   @Test void testAllTbsIndices() {
     DseManager dsemgr = new DseManager()
     dsemgr.tbsImageIndexFiles = tbsImageFiles
     dsemgr.textImageIndexFiles = textImageFiles
+
+    dsemgr.textTbsIndexFiles = textSurfaceFiles
+
 
     String folioUrnStr = "urn:cite:hmt:msA.53r"
     assert dsemgr.verifyTbs(folioUrnStr)
