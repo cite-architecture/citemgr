@@ -61,14 +61,18 @@ class DseManager {
     }
 
     // verify text nodes for image by:
-    // collect all text nodes for TBS
+
     // collect all text nodes for image
+    def txtNodesForImage = this.textNodesForImage(img)
+    if (debug > 0) {
+      System.err.println "Text for Image:" + txtNodesForImage
+    }
+
+
+    // collect all text nodes for TBS
     // should be set-identical
 
-    if (debug > 0) {
-      System.err.println "Text for Image:" + this.textNodesForImage(urn)
-      // System.err.println "Text for Tbs:"
-    }
+
 
     // verify text nodes for tbs
     return valid
@@ -109,16 +113,22 @@ class DseManager {
   ArrayList textNodesForImage(CiteUrn urn) {
     // cycle all index files, and invoke
     // textNodesForImage with file
- 
+    System.err.println "Find image " + urn 
+    System.err.println "DseManager:textNodesForImage: using textImage files ${this.textImageIndexFiles}"
     if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
       throw new Exception ("DseManager:texNodesForImage: no index files configured.")
     }
+
 
 
     def nodeList = []
 
     this.textImageIndexFiles.each { f ->
       def singleList = this.textNodesForImage(urn, f)
+      if (debug > 0) {
+	System.err.println "DseManager:textNodesForImage: ${urn} in ${f} yielded:"
+	System.err.println "\t" + singleList
+      }
       singleList.each { 
 	nodeList.add(it)
       }

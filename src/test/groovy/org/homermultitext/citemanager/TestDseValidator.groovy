@@ -11,17 +11,23 @@ import edu.harvard.chs.cite.CiteUrn
 class TestDseValidator extends GroovyTestCase {
 
 
-  // CONFIGURE INDEX FILES FOR OTHER INDICES!
+
 
   File dataDir = new File("testdata/dse")
+
   File imgTbsIndex = new File(dataDir,"folioToOverviewImage.csv")
-  ArrayList indexFiles = [imgTbsIndex]  
+  ArrayList tbsImageFiles = [imgTbsIndex]  
+
+  File textImageIndex = new File(dataDir, "linesToImage-4.csv")
+  ArrayList textImageFiles = [textImageIndex]
+
 
   @Test void testAllTbsIndices() {
     DseManager dsemgr = new DseManager()
-    dsemgr.tbsImageIndexFiles = indexFiles
-    
-    String folioUrnStr = "urn:cite:hmt:u4.193r"
+    dsemgr.tbsImageIndexFiles = tbsImageFiles
+    dsemgr.textImageIndexFiles = textImageFiles
+
+    String folioUrnStr = "urn:cite:hmt:msA.53r"
     assert dsemgr.verifyTbs(folioUrnStr)
   }
 
