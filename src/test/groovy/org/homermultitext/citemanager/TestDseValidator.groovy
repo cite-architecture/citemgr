@@ -11,6 +11,8 @@ import edu.harvard.chs.cite.CiteUrn
 class TestDseValidator extends GroovyTestCase {
 
 
+  // CONFIGURE INDEX FILES FOR OTHER INDICES!
+
   File dataDir = new File("testdata/dse")
   File imgTbsIndex = new File(dataDir,"folioToOverviewImage.csv")
   ArrayList indexFiles = [imgTbsIndex]  

@@ -66,7 +66,7 @@ class DseManager {
     // should be set-identical
 
     if (debug > 0) {
-      System.err.println "Text for Image:" + textNodesForImage(urn)
+      System.err.println "Text for Image:" + this.textNodesForImage(urn)
       // System.err.println "Text for Tbs:"
     }
 
@@ -95,23 +95,36 @@ class DseManager {
   //////////////// TRIO OF METHODS FOR TEXT -> IMAGE ////////////////
 
 
-  ArrayList textNodesForImage(String imgStr) {
+  ArrayList textNodesForImage(String imgStr) 
+  throws Exception {
+    try {
+      CiteUrn u = new CiteUrn(imgStr)
+      return textNodesForImage(u)
+
+    } catch (Exception e) {
+      throw e
+    }
+  }
+
+  ArrayList textNodesForImage(CiteUrn urn) {
     // cycle all index files, and invoke
     // textNodesForImage with file
-    /*
-    if ((! this.tbsImageIndexFiles) || (this.tbsImageIndexFiles.size() == 0)) {
-      throw new Exception ("DseManager:imageForTbs: no index files configured.")
+ 
+    if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
+      throw new Exception ("DseManager:texNodesForImage: no index files configured.")
     }
 
-    CiteUrn defaultImage = null
-    this.tbsImageIndexFiles.each { f ->
-      CiteUrn imgUrn = this.imageForTbs(urn,f)
-      if (imgUrn != null) {
-       defaultImage = imgUrn
+
+    def nodeList = []
+
+    this.textImageIndexFiles.each { f ->
+      def singleList = this.textNodesForImage(urn, f)
+      singleList.each { 
+	nodeList.add(it)
       }
     }
-    return defaultImage  
-    */
+
+    return nodeList  
   }
 
 

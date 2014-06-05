@@ -28,7 +28,18 @@ class TestDseTextForImg extends GroovyTestCase {
   }
 
   @Test void testAllTextImageIndices() {
-    assert 1
+    DseManager dsemgr = new DseManager()
+    dsemgr.textImageIndexFiles = indexFiles
+
+    String expectedFile = "testdata/dse/linesToImage-4.csv"
+    assert expectedFile == dsemgr.textImageIndexFiles[0] as String
+
+    String imgUrn = "urn:cite:hmt:vaimg.VA053RN-0054"
+    def txtList = dsemgr.textNodesForImage(imgUrn)
+
+    Integer expectedSize = 25
+    assert txtList.size() == expectedSize
+    
   }
 
 

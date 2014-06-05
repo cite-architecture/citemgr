@@ -6,4 +6,7 @@ project.ext {
   tbsDefaultImage = "scholiaToImgIndex.tsv, scholiaToImgIndex-e3.tsv"
   // comma-separated list of file names within indices dir:
   imageTextIndices = "linesToImage-4.csv, linesToImage-7.csv, linesToImage-9.csv"
+  // comma-separated list of file names within indices dir:
+  textTbsIndices = "venAIliad.tsv, venAScholiaToFolio.tsv"
+  
 }
