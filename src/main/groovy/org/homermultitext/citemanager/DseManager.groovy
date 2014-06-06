@@ -14,7 +14,7 @@ import edu.holycross.shot.prestochango.CollectionArchive
  */
 class DseManager {
 
-  Integer debug = 1
+  Integer debug = 0
 
 
   /** List of files indexing text-bearing surfaces to images. */
@@ -43,14 +43,18 @@ class DseManager {
   }
 
 
-  /** Performs completes DSE validation for a given
-   * text-bearing surface. That means
-   * all three edges of the DSE triangle:
+  /** Performs DSE validation for a given
+   * text-bearing surface. Checks for referntial integrity
+   * across the three edges of the DSE triangle:
    *
    * 1. image to TBS
    * 2. text to TBS
    * 3. text to image
    * 
+   * Tests currently verify that a single default image is
+   * indexed to TBS, that an identical set of text nodes are indexed
+   * to TBS and the default image.
+   *
    * @param urn The text-bearing surface to validate.
    * @returns True if all tests pass.
    */
@@ -64,23 +68,19 @@ class DseManager {
     }
 
     // 2. Verify text nodes for image by:
-
     // A. collect all text nodes for image
     def txtNodesForImage = this.textNodesForImage(img)
     if (debug > 0) {
       System.err.println "Text for Image:" + txtNodesForImage
     }
-
-
     // B. collect all text nodes for TBS
     def txtNodesForSurface = this.textNodesForSurface(urn)
 
-
     // should be set-identical
-    assert txtNodesForSurface as Set == txtNodesForImage as Set
+    if (txtNodesForSurface as Set != txtNodesForImage as Set) {
+     valid = false
+    }
 
-
-    // verify text nodes for tbs
     return valid
   }
 
