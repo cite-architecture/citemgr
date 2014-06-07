@@ -1,3 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+	maven {
+	  url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
+	}
+    }
+    dependencies {
+
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.10.8'
+    }
+}
+
+import edu.holycross.shot.hocuspocus.Corpus
+
+
+
 
 apply plugin: "base"
 apply plugin:  "groovy"
@@ -5,6 +22,9 @@ apply plugin:  "maven"
 
 apply from: "versions.gradle"
 apply from: "schemas.gradle"
+
+
+
 
 if (! hasProperty('prefix')) {
     apply from: "options.gradle"
@@ -53,6 +73,7 @@ if (hasProperty('conf')) {
 }
 
 
+
 group = "org.homermultitext"
 version = '0.4.1'
 
@@ -71,23 +92,22 @@ configurations {
 }
 
 dependencies {
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
+  compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
 
-    compile group: 'edu.holycross.shot', name: 'nysi', version: nysiVersion
-    compile group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion
-    compile group : 'edu.holycross.shot', name : 'prestochango', version : prestochangoVersion
-    compile group : 'edu.holycross.shot', name : 'abracadabra', version : abracadabraVersion
+  compile group: 'edu.holycross.shot', name: 'nysi', version: nysiVersion
+  compile group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion
+  compile group : 'edu.holycross.shot', name : 'prestochango', version : prestochangoVersion
+  compile group : 'edu.holycross.shot', name : 'abracadabra', version : abracadabraVersion
+  
+  compile group: 'edu.harvard.chs', name: 'cite', version: citeVersion
+  compile group: 'edu.harvard.chs', name : 'greekutils' , version: greekutilsVersion
+
+  // needed for hocuspocus:
+  compile group: 'com.thaiopensource', name:'jing', version: jingVersion
+  compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
     
-    compile group: 'edu.harvard.chs', name: 'cite', version: citeVersion
-    compile group: 'edu.harvard.chs', name : 'greekutils' , version: greekutilsVersion
-
-    // needed for hocuspocus:
-    compile group: 'com.thaiopensource', name:'jing', version: jingVersion
-    compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
-    
-
-    testCompile group: 'junit', name: 'junit', version: junitVersion
-    testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
+  testCompile group: 'junit', name: 'junit', version: junitVersion
+  testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
 }
 
 
@@ -121,6 +141,27 @@ task checkimginv() {
     doLast {
         System.err.println "checkimginv:  not yet implemented."
     }
+}
+
+
+task ctstab() {
+}
+
+ctstab.doFirst() {
+  if (! buildDir.exists()) {
+    buildDir.mkdir()
+  }
+  File tabs = new File(buildDir, "tabs")
+  if (! tabs.exists()) {
+    tabs.mkdir()
+  }
+}
+ctstab.doLast() {
+  println "build corpus from " + ctsinventory + " and " + ctsarchive
+  println "Work in " + buildDir
+  Corpus c = new Corpus(new File("${ctsinventory}"), new File("${ctsarchive}"))
+  c.debug = 10
+  c.tabulateRepository(new File(buildDir, "tabs"))
 }
 
 

@@ -1,4 +1,10 @@
 
+/* Version numbers for use in compilation.
+   
+   NB: dependencies within buildScript task do not have access to
+   these properties!
+
+ */
 project.ext {
     groovyVersion = "2.0.6"
 
