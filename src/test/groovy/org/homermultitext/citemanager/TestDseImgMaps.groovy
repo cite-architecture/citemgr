@@ -25,12 +25,13 @@ class TestDseImgMaps extends GroovyTestCase {
     def linesMap = dsemgr.imageMapsByText(imgStr, dsemgr.textImageIndexFiles[0])
     assert linesMap.keySet().size() == 1
 
+    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA"
+    Integer expectedMappings = 25
 
     linesMap.keySet().each { k ->
-      assert linesMap[k].size() == 25
+      assert k == expectedKey
+      assert linesMap[k].size() == expectedMappings
     }
-
-
   }
 
 
