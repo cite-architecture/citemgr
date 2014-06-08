@@ -8,6 +8,7 @@ import edu.harvard.chs.cite.CiteUrn
 import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.prestochango.CollectionArchive
 
+import au.com.bytecode.opencsv.CSVReader
 
 
 /** A class for managing a standard Digital Scholarly Editions archive.
@@ -24,15 +25,153 @@ class DseManager {
   /** List of files indexing text nodes to text-bearing surfaces. */
   ArrayList textTbsIndexFiles
 
+  /** Xsl stylesheet for formatting web page from XML
+   * expressing a CITE graph
+   **/
+  String invXsl = "xslt/dse_inventory.xsl"
+
 
   /** Empty constructor */
   DseManager()   {
   }
 
 
+  String getVisualInventoryXml (String urnStr) 
+  throws Exception {
+    try {
+      CiteUrn u = new CiteUrn(urnStr)
+      return getVisualInventoryXml(u)
+    } catch (Exception e) {
+      throw e
+    }
+   }
 
 
-  boolean verifyTbs(String urnStr) {
+
+  String getVisualInventoryXml (CiteUrn urn)  {
+    def defaultImageUrn
+    String verb = "http://www.homermultitext.org/cite/rdf/illustrates"
+
+
+    def xml = new groovy.xml.StreamingMarkupBuilder().bind {
+      mkp.declareNamespace('':'http://chs.harvard.edu/xmlns/citeindex')
+      mkp.pi("xml-stylesheet": "type='text/xsl' href='" + invXsl + "'" )
+
+      citegraph {
+	request {
+	  urn("${defaultImageUrn}")
+	  sparqlEndPoint("locallyEditedData")
+	}
+	reply {
+	  graph(urn: "${defaultImageUrn}") {
+	    this.imageMapsByTexts.keySet().each { txt ->
+	      sequence {
+		label ("${txt}")
+		value {
+		  
+		  def imgMapping = imageMapsByTexts[txt]
+		  imgMapping.each { img ->
+		    img.keySet().each { k ->
+		      node (type: "text", s : "${img[k]}", v : "${verb}") {
+			label("${k}")
+			value("${k}")
+		      }
+		    }
+		  }
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    return xml.toString()
+  }
+
+
+
+  LinkedHashMap imageMapsByText(String urnStr) 
+  throws Exception {
+    try {
+      CiteUrn u = new CiteUrn(urnStr)
+      return imageMapsByText(u)
+
+    } catch (Exception e) {
+      throw e
+    }
+  }
+
+
+
+
+  /** Creates map of texts indexed to a given image.
+   * @param img The image to map.
+   * @returns The map expressed as a CITE graph in
+   * XML.
+   */
+  String imageMapsByText(CiteUrn img) {
+  }
+
+
+
+
+
+  LinkedHashMap imageMapsByText(String imgStr, File indexFile) 
+  throws Exception {
+    try {
+      CiteUrn u = new CiteUrn(imgStr)
+      return imageMapsByText(u, indexFile)
+
+    } catch (Exception e) {
+      throw e
+    }
+  }
+
+
+  LinkedHashMap imageMapsByText(CiteUrn img, File indexFile) {
+    def results = [:]
+
+    if (indexFile.toString() ==~ /.+csv/) {
+      CSVReader reader = new CSVReader(new FileReader(indexFile))
+      reader.readAll().each { ln ->
+	String imgStr = ln[1]
+	if (imgStr ==~ /${img}@.+$/) {
+	  String doc = new CtsUrn(ln[0]).getUrnWithoutPassage()
+	  def imgGroup = []
+	  if (results[doc]) {
+	    imgGroup = results[doc]
+	  }
+	  imgGroup.add(ln[1])
+	  results[doc] = imgGroup
+
+	}
+      }
+    } else if (indexFile.toString() ==~ /.+tsv/) {
+      // implement tsv reading
+
+    } else {
+    }
+    return results
+  }
+
+
+	  /*
+    indexRecord.each { ln ->
+      System.err.println ln
+
+      String urnStr = ln.replaceFirst(/,.+/, '')
+      try {
+	CtsUrn urn = new CtsUrn(urnStr)
+	results.add(urnStr)
+      } catch (Exception e) {
+	System.err.println "DseManager:textNodesForImage: badly formed CTS URN ${urnStr}"
+      }
+      */
+
+
+
+  boolean verifyTbs(String urnStr) 
+  throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
       return verifyTbs(u)
@@ -86,7 +225,7 @@ class DseManager {
 
 
 
-  //////////////// TRIO OF METHODS FOR TEXT -> SURFACE ////////////////
+  //////////////// TRIO OF METHODS FOR TEXT -> SURFACE INDEX ////////////////
 
 
 
@@ -183,7 +322,7 @@ class DseManager {
 
 
 
-  //////////////// TRIO OF METHODS FOR TEXT -> IMAGE ////////////////
+  //////////////// TRIO OF METHODS FOR TEXT -> IMAGE INDEX ////////////////
 
 
 
@@ -277,7 +416,7 @@ class DseManager {
 
 
 
-  //////////////// TRIO OF METHODS FOR IMAGE -> SURFACE ////////////////
+  //////////////// TRIO OF METHODS FOR IMAGE -> SURFACE INDEX ////////////////
 
 
   /** Searches all index files for a default image

@@ -84,6 +84,9 @@ repositories {
     maven {
         url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
     }
+    maven {
+      url "https://oss.sonatype.org"
+    }
 }
 
 configurations {
@@ -101,6 +104,9 @@ dependencies {
   
   compile group: 'edu.harvard.chs', name: 'cite', version: citeVersion
   compile group: 'edu.harvard.chs', name : 'greekutils' , version: greekutilsVersion
+
+  compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
+
 
   // needed for hocuspocus:
   compile group: 'com.thaiopensource', name:'jing', version: jingVersion
