@@ -64,12 +64,12 @@ class DseManager {
 	}
 	reply {
 	  graph(urn: "${defaultImageUrn}") {
-	    this.imageMapsByTexts.keySet().each { txt ->
+	    this.imageMapsByText.keySet().each { txt ->
 	      sequence {
 		label ("${txt}")
 		value {
 		  
-		  def imgMapping = imageMapsByTexts[txt]
+		  def imgMapping = imageMapsByText[txt]
 		  imgMapping.each { img ->
 		    img.keySet().each { k ->
 		      node (type: "text", s : "${img[k]}", v : "${verb}") {
@@ -94,6 +94,7 @@ class DseManager {
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
+      System.err.println "Getting map for string " + urnStr
       return imageMapsByText(u)
 
     } catch (Exception e) {
@@ -109,7 +110,17 @@ class DseManager {
    * @returns The map expressed as a CITE graph in
    * XML.
    */
-  String imageMapsByText(CiteUrn img) {
+  LinkedHashMap imageMapsByText(CiteUrn img) {
+    if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
+      throw new Exception ("DseManager:imageMapsByText: no index files configured.")
+    }
+    def nodeMap = [:]
+    // cycle all index files, and invoke textNodesForImage with file
+    this.textImageIndexFiles.each { f ->
+      def singleMap = this.imageMapsByText(img, f)
+      nodeMap << singleMap
+    }
+    return nodeMap
   }
 
 
@@ -153,21 +164,6 @@ class DseManager {
     }
     return results
   }
-
-
-	  /*
-    indexRecord.each { ln ->
-      System.err.println ln
-
-      String urnStr = ln.replaceFirst(/,.+/, '')
-      try {
-	CtsUrn urn = new CtsUrn(urnStr)
-	results.add(urnStr)
-      } catch (Exception e) {
-	System.err.println "DseManager:textNodesForImage: badly formed CTS URN ${urnStr}"
-      }
-      */
-
 
 
   boolean verifyTbs(String urnStr) 
