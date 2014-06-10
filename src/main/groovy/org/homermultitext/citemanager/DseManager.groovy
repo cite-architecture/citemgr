@@ -147,16 +147,18 @@ class DseManager {
     if (indexFile.toString() ==~ /.+csv/) {
       CSVReader reader = new CSVReader(new FileReader(indexFile))
       reader.readAll().each { ln ->
-	String imgStr = ln[1]
-	if (imgStr ==~ /${img}@.+$/) {
-	  String doc = new CtsUrn(ln[0]).getUrnWithoutPassage()
-	  def imgGroup = []
-	  if (results[doc]) {
-	    imgGroup = results[doc]
+	// allow for incomplete entries...
+	if (ln.size() == 2) {
+	  String imgStr = ln[1]
+	  if (imgStr ==~ /${img}@.+$/) {
+	    String doc = new CtsUrn(ln[0]).getUrnWithoutPassage()
+	    def imgGroup = []
+	    if (results[doc]) {
+	      imgGroup = results[doc]
+	    }
+	    imgGroup.add([ln[0],ln[1]])
+	    results[doc] = imgGroup
 	  }
-	  imgGroup.add([ln[0],ln[1]])
-	  results[doc] = imgGroup
-
 	}
       }
     } else if (indexFile.toString() ==~ /.+tsv/) {
