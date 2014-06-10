@@ -127,7 +127,7 @@ dependencies {
 
 
 task checkti(type: JavaExec, dependsOn: compileGroovy) {
-    description = "Verifies contents of configured text inventory"
+    description = "Verifies contents of configured text inventory."
     
     main = "org.homermultitext.citemanager.TIVerifier"
     args = ["${ctsinventory}"]
@@ -137,21 +137,21 @@ task checkti(type: JavaExec, dependsOn: compileGroovy) {
 }
 
 task checkccinv() {
-    description = "Verifies contents of configured collection inventory"
+    description = "Verifies contents of configured collection inventory."
     doLast {
         System.err.println "checkccinv:  not yet implemented."
     }
 }
 
 task checkidxinv() {
-    description = "Verifies contents of configured collection inventory"
+    description = "Verifies contents of configured collection inventory."
     doLast {
         System.err.println "checkidxinv:  not yet implemented."
     }
 }
 
 task checkimginv() {
-    description = "Verifies contents of configured collection inventory"
+    description = "Verifies contents of configured collection inventory."
     doLast {
         System.err.println "checkimginv:  not yet implemented."
     }
@@ -159,6 +159,7 @@ task checkimginv() {
 
 
 task ctstab() {
+  description = "Generates a tabular representation of all texts in configured text archive."
 }
 
 ctstab.doFirst() {
@@ -229,28 +230,29 @@ task idxttl (type: JavaExec, dependsOn: compileGroovy) {
 }
 
 task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
-    doLast {
-        String charEnc = "UTF-8"
-	String prefix = "${prefixString}"
+  description = "Concatenates separate TTL files into a single graph."
+  doLast {
+    String charEnc = "UTF-8"
+    String prefix = "${prefixString}"
 
-        File ctsttl = new File("${buildDir}/ttl/cts.ttl")
-        File collectionsttl = new File("${buildDir}/ttl/collections.ttl")
-        File idxttl = new File("${buildDir}/ttl/indices.ttl")
-        File citeimgttl = new File("${buildDir}/ttl/citeimgs.ttl")
+    File ctsttl = new File("${buildDir}/ttl/cts.ttl")
+    File collectionsttl = new File("${buildDir}/ttl/collections.ttl")
+    File idxttl = new File("${buildDir}/ttl/indices.ttl")
+    File citeimgttl = new File("${buildDir}/ttl/citeimgs.ttl")
 
-        def srcFiles =  [ctsttl, collectionsttl, idxttl, citeimgttl]
+    def srcFiles =  [ctsttl, collectionsttl, idxttl, citeimgttl]
 
-        File ttl = new File("${buildDir}/ttl/all.ttl")        
-        ttl.append( prefix )
+    File ttl = new File("${buildDir}/ttl/all.ttl")        
+    ttl.append( prefix )
 
-        srcFiles.each {  f ->
-            if (f.exists()) {
-                ttl.withWriterAppend(charEnc) {writer -> 
-                    f.newReader(charEnc).eachLine {String line -> 
-                        writer << "\n${line}"         
-            } 
-            }
-        } }
+    srcFiles.each {  f ->
+      if (f.exists()) {
+	ttl.withWriterAppend(charEnc) {writer -> 
+	  f.newReader(charEnc).eachLine {String line -> 
+	    writer << "\n${line}"         
+	  } 
+	}
+      } }
 
 // too slow to tolerate :-(
 /*
@@ -313,17 +315,18 @@ artifacts {
 
 
 task cleanTest () {
-    doLast {
-        File out1 = new File("testdata/testoutput")
-        if (out1.exists()) { 
-            out1.listFiles().each { f ->
-                System.err.println "Delete " + f
-                f.delete()
-            }
-            out1.delete() 
-        }
-        out1.mkdir()
+  description = "Deletes contents of test output directory."
+  doLast {
+    File out1 = new File("testdata/testoutput")
+    if (out1.exists()) { 
+      out1.listFiles().each { f ->
+	System.err.println "Delete " + f
+	f.delete()
+      }
+      out1.delete() 
     }
+    out1.mkdir()
+  }
 }
 
 
