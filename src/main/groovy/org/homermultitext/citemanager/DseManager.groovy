@@ -47,9 +47,12 @@ class DseManager {
    }
 
 
+  // exception of not configured
+  String getVisualInventoryXml (CiteUrn tbsUrn)  
+  throws Exception {
+    def defaultImageUrn = this.imageForTbs(tbsUrn)
+    def imgMaps = imageMapsByText(defaultImageUrn)
 
-  String getVisualInventoryXml (CiteUrn urn)  {
-    def defaultImageUrn
     String verb = "http://www.homermultitext.org/cite/rdf/illustrates"
 
 
@@ -64,19 +67,18 @@ class DseManager {
 	}
 	reply {
 	  graph(urn: "${defaultImageUrn}") {
-	    this.imageMapsByText.keySet().each { txt ->
+
+	    imgMaps.keySet().each { txt ->
 	      sequence {
 		label ("${txt}")
 		value {
 		  
-		  def imgMapping = imageMapsByText[txt]
+		  def imgMapping = imgMaps[txt]
 		  imgMapping.each { img ->
-		    img.keySet().each { k ->
-		      node (type: "text", s : "${img[k]}", v : "${verb}") {
-			label("${k}")
-			value("${k}")
+		    node (type: "text", s : "${img[1]}", v : "${verb}") {
+			label("${img[0]}")
+			value("${img[0]}")
 		      }
-		    }
 		  }
 		}
 	      }
@@ -152,7 +154,7 @@ class DseManager {
 	  if (results[doc]) {
 	    imgGroup = results[doc]
 	  }
-	  imgGroup.add(ln[1])
+	  imgGroup.add([ln[0],ln[1]])
 	  results[doc] = imgGroup
 
 	}
