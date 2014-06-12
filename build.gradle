@@ -75,15 +75,11 @@ if (hasProperty('conf')) {
 
 
 group = "org.homermultitext"
-version = '0.4.2'
+version = '0.4.5'
 description = """
 citemgr is a build system for managing archives of locally stored data cited by URN.
 It includes tasks for building a complete TTL representation of the archives, and
 for creating a complete tabular representation of the texts in a CTS archive.
-
-Version 4.1 adds validation of optionally configured relations among archival
-texts, artifacts and images following the Digital Scholarly Editing model.
-
 """
 
 repositories {
