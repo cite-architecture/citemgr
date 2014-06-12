@@ -17,14 +17,34 @@ class TestDseMultiMaps extends GroovyTestCase {
   ArrayList indexFiles = [scholiaImgIndex, iliadImgIndex] 
 
   CiteUrn folio = new CiteUrn ("urn:cite:hmt:msA.137v")
+  CiteUrn img = new CiteUrn("urn:cite:hmt:vaimg.VA137VN-0639")
 
-  @Test void testTextImageIndex() {
+
+  Integer expectedSize = 50
+
+  @Test void testTextTbsIndex() {
     DseManager dsemgr = new DseManager()
 
     dsemgr.textTbsIndexFiles = indexFiles
     def matches = dsemgr.textNodesForSurface(folio)
-    Integer expectedSize = 50
+
     assert matches.size() == expectedSize
   }
+
+
+  @Test void testTextImageIndex() {
+    DseManager dsemgr = new DseManager()
+    dsemgr.debug = 5
+
+    dsemgr.textImageIndexFiles = 
+    [
+      new File(dataDir, "scholiaToImage.csv"),
+      new File(dataDir, "venA-textToImage-Iliad.csv")
+    ]
+
+    def matches =    dsemgr.textNodesForImage(img)
+    assert matches.size() == expectedSize    
+  }
+
 
 }

@@ -75,16 +75,8 @@ if (hasProperty('conf')) {
 
 
 group = "org.homermultitext"
-<<<<<<< HEAD
+
 version = '0.4.5'
-=======
-version = '0.4.4'
->>>>>>> 88da6123e49a6d45525277fa682bda9960346cc2
-description = """
-citemgr is a build system for managing archives of locally stored data cited by URN.
-It includes tasks for building a complete TTL representation of the archives, and
-for creating a complete tabular representation of the texts in a CTS archive.
-"""
 
 repositories {
     mavenCentral()

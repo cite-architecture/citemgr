@@ -404,7 +404,7 @@ class DseManager {
    */
   ArrayList textNodesForImage(CiteUrn img, File indexFile) {
     def results = []
-
+    if (debug > 0) { System.err.println "textNodesForImage: grep in ${indexFile} for ${img}" }
     def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
     indexRecord.each { ln ->
       String urnStr = ln.replaceFirst(/,.+/, '').replaceAll(/"/,'')
