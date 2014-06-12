@@ -301,10 +301,14 @@ class DseManager {
   ArrayList textNodesForSurface(CiteUrn urn, File indexFile) {
 
     def results = []
+    def indexRecord =  indexFile.readLines().grep( ~/^.+,"?${urn}"?/ ) 
+    if (debug > 0) {
+      System.err.println "textNodesForSurface: file ${indexFile}, grepped " + indexRecord + " from " + urn
+    }
 
-    def indexRecord =  indexFile.readLines().grep( ~/^.+,${urn}/ ) 
     indexRecord.each { ln ->
-      String urnStr = ln.replaceFirst(/,.+/, '')
+      String urnStr = ln.replaceFirst(/,.+/, '').replaceAll(/"/,'')
+      if (debug > 0) {System.err.println "textNodesForSurface:  parse urnStr " + urnStr}
       try {
 	CtsUrn psg = new CtsUrn(urnStr)
 	results.add(urnStr)
@@ -401,7 +405,7 @@ class DseManager {
 
     def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
     indexRecord.each { ln ->
-      String urnStr = ln.replaceFirst(/,.+/, '')
+      String urnStr = ln.replaceFirst(/,.+/, '').replaceAll(/"/,'')
       try {
 	CtsUrn urn = new CtsUrn(urnStr)
 	results.add(urnStr)

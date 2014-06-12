@@ -75,7 +75,7 @@ if (hasProperty('conf')) {
 
 
 group = "org.homermultitext"
-version = '0.4.1'
+version = '0.4.2'
 description = """
 citemgr is a build system for managing archives of locally stored data cited by URN.
 It includes tasks for building a complete TTL representation of the archives, and
