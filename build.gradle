@@ -1,0 +1,344 @@
+buildscript {
+    repositories {
+        mavenCentral()
+	maven {
+	  url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
+	}
+    }
+    dependencies {
+
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.10.8'
+    }
+}
+
+import edu.holycross.shot.hocuspocus.Corpus
+
+
+
+
+apply plugin: "base"
+apply plugin:  "groovy"
+apply plugin:  "maven"
+
+apply from: "versions.gradle"
+apply from: "schemas.gradle"
+
+
+
+
+if (! hasProperty('prefix')) {
+    apply from: "options.gradle"
+}
+
+/* Settings for Digital Scholarly Edition data */
+if (hasProperty('dse')) {
+    apply from: dse
+}
+
+
+if (hasProperty('pub')) {
+    System.err.print "Using publication configuration from ${pub}"
+    File confFile = new File(pub)
+    if (! confFile.exists()) {
+        throw new Exception("No configuration file ${pub} found.")
+    }
+    apply from: pub
+
+} else {
+    File confFile = new File("pubconf.gradle")
+    if (! confFile.exists()) {
+        throw new Exception("No configuration file 'pubconf.gradle' found.")
+    }
+    println "Using default publication configuration in 'pubconf.gradle'"
+    apply from: "pubconf.gradle"
+}
+
+
+// Consider possible configurations:
+if (hasProperty('conf')) {
+    System.err.print "Using configuration data from ${conf}"
+    File confFile = new File(conf)
+    if (! confFile.exists()) {
+        throw new Exception("No configuration file ${conf} found.")
+    }
+    apply from: conf
+
+} else {
+    File confFile = new File("conf.gradle")
+    if (! confFile.exists()) {
+        throw new Exception("No configuration file ${conf} found.")
+    }
+    println "Using default configuration in 'conf.gradle'"
+    apply from: "conf.gradle"
+}
+
+
+
+group = "org.homermultitext"
+<<<<<<< HEAD
+version = '0.4.5'
+=======
+version = '0.4.4'
+>>>>>>> 88da6123e49a6d45525277fa682bda9960346cc2
+description = """
+citemgr is a build system for managing archives of locally stored data cited by URN.
+It includes tasks for building a complete TTL representation of the archives, and
+for creating a complete tabular representation of the texts in a CTS archive.
+"""
+
+repositories {
+    mavenCentral()
+    
+    maven {
+        url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
+    }
+    maven {
+      url "https://oss.sonatype.org"
+    }
+}
+
+configurations {
+  rdf
+  lib
+}
+
+dependencies {
+  compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
+
+  compile group: 'edu.holycross.shot', name: 'nysi', version: nysiVersion
+  compile group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion
+  compile group : 'edu.holycross.shot', name : 'prestochango', version : prestochangoVersion
+  compile group : 'edu.holycross.shot', name : 'abracadabra', version : abracadabraVersion
+  
+  compile group: 'edu.harvard.chs', name: 'cite', version: citeVersion
+  compile group: 'edu.harvard.chs', name : 'greekutils' , version: greekutilsVersion
+
+  compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
+
+
+  // needed for hocuspocus:
+  compile group: 'com.thaiopensource', name:'jing', version: jingVersion
+  compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
+    
+  testCompile group: 'junit', name: 'junit', version: junitVersion
+  testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
+}
+
+
+
+task checkti(type: JavaExec, dependsOn: compileGroovy) {
+    description = "Verifies contents of configured text inventory."
+    
+    main = "org.homermultitext.citemanager.TIVerifier"
+    args = ["${ctsinventory}"]
+
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+}
+
+task checkccinv() {
+    description = "Verifies contents of configured collection inventory."
+    doLast {
+        System.err.println "checkccinv:  not yet implemented."
+    }
+}
+
+task checkidxinv() {
+    description = "Verifies contents of configured collection inventory."
+    doLast {
+        System.err.println "checkidxinv:  not yet implemented."
+    }
+}
+
+task checkimginv() {
+    description = "Verifies contents of configured collection inventory."
+    doLast {
+        System.err.println "checkimginv:  not yet implemented."
+    }
+}
+
+
+task ctstab() {
+  description = "Generates a tabular representation of all texts in configured text archive."
+}
+
+ctstab.doFirst() {
+  if (! buildDir.exists()) {
+    buildDir.mkdir()
+  }
+  File tabs = new File(buildDir, "tabs")
+  if (! tabs.exists()) {
+    tabs.mkdir()
+  }
+}
+ctstab.doLast() {
+  println "build corpus from " + ctsinventory + " and " + ctsarchive
+  println "Work in " + buildDir
+  Corpus c = new Corpus(new File("${ctsinventory}"), new File("${ctsarchive}"))
+  c.debug = 10
+  c.tabulateRepository(new File(buildDir, "tabs"))
+}
+
+
+task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
+     description = "Generates TTL statements about text contents"
+
+    main = "org.homermultitext.citemanager.HocusPocusTurtleizer"
+    args = ["${ctsinventory}", "${ctsarchive}", "${buildDir}/ttl", "cts.ttl", "${prefix}"]
+
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+}
+
+ctsttl.doFirst {
+  System.err.println "ctsttl will use inventory ${ctsinventory}"
+  System.err.println "and archive ${ctsarchive}"
+}
+
+task imgttl (type: JavaExec, dependsOn: compileGroovy) {
+    description = "Generates RDF for configured NYSI"
+    main = "org.homermultitext.citemanager.NysiTurtleizer"
+    args = ["${imgcolldir}", "${imgdatadir}", "${buildDir}/ttl", "citeimgs.ttl", "${prefix}"]
+
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+    doFirst {
+        System.err.println "\nTTLize images with ${args}\n"
+    }
+}
+
+
+task ccttl (type: JavaExec, dependsOn: compileGroovy) {
+    description = "Generates RDF for Collections configured for prestochango"
+    main = "org.homermultitext.citemanager.PrestochangoTurtleizer"
+    args = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
+
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+
+}
+
+
+task idxttl (type: JavaExec, dependsOn: compileGroovy) {
+    description = "Generates RDF for indices configured for abracadabra"
+    main = "org.homermultitext.citemanager.AbracadabraTurtleizer"
+    args = ["${idxinv}", "${idxarchive}", "${buildDir}/ttl", "indices.ttl", "${prefix}"]
+
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+
+}
+
+task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
+  description = "Concatenates separate TTL files into a single graph."
+  doLast {
+    String charEnc = "UTF-8"
+    String prefix = "${prefixString}"
+
+    File ctsttl = new File("${buildDir}/ttl/cts.ttl")
+    File collectionsttl = new File("${buildDir}/ttl/collections.ttl")
+    File idxttl = new File("${buildDir}/ttl/indices.ttl")
+    File citeimgttl = new File("${buildDir}/ttl/citeimgs.ttl")
+
+    def srcFiles =  [ctsttl, collectionsttl, idxttl, citeimgttl]
+
+    File ttl = new File("${buildDir}/ttl/all.ttl")        
+    ttl.append( prefix )
+
+    srcFiles.each {  f ->
+      if (f.exists()) {
+	ttl.withWriterAppend(charEnc) {writer -> 
+	  f.newReader(charEnc).eachLine {String line -> 
+	    writer << "\n${line}"         
+	  } 
+	}
+      } }
+
+// too slow to tolerate :-(
+/*
+        System.err.println "Adding data from cts ttl ..."
+        ctsttl.eachLine(charEnc) {
+            ttl.append("${it}\n")
+        }
+
+        System.err.println "Adding data from collections ttl ..."
+        collectionsttl.eachLine(charEnc) {
+            ttl.append("${it}\n")
+        }
+
+
+        System.err.println "Adding data from index ttl ..."
+        idxttl.eachLine(charEnc) {
+            ttl.append("${it}\n")
+        }
+
+
+
+        System.err.println "Adding data from image ttl ..."
+        citeimgttl.eachLine(charEnc) {
+            ttl.append("${it}\n")
+        }
+*/
+
+// Big project runs out of memory with this approach :-(
+//+ ctsttl.getText(charEnc) + collectionsttl.getText(charEnc) + idxttl.getText(charEnc) + citeimgttl.getText(charEnc), charEnc)
+
+        System.out.println "\nCompleted generating all TTL in ${buildDir}/ttl.\n"
+    }
+}
+
+
+
+task showProj() {
+  println "file://${projectDir}/${collectionInvUrl}"
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: nexusRepo) {
+            authentication (userName: nexusUser, password: nexusPassword)
+        }
+    }
+}
+
+task zipTtl(type: Zip, dependsOn: [ttl]) {
+  description = "Builds a zip file of all TTL output"
+  from(file("${buildDir}/ttl"))
+  include("**/*.ttl")
+}
+
+artifacts {
+  rdf zipTtl
+  lib jar
+}
+
+
+
+task cleanTest () {
+  description = "Deletes contents of test output directory."
+  doLast {
+    File out1 = new File("testdata/testoutput")
+    if (out1.exists()) { 
+      out1.listFiles().each { f ->
+	System.err.println "Delete " + f
+	f.delete()
+      }
+      out1.delete() 
+    }
+    out1.mkdir()
+  }
+}
+
+
+test.dependsOn cleanTest
+
+uploadLib {
+  repositories.mavenDeployer {
+    repository(url: nexusRepo) {                   
+      authentication (userName: nexusUser, password: nexusPassword)
+    }
+  }
+  doLast {
+    System.err.println "Code library uploaded."
+  }
+}
