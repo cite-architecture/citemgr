@@ -23,6 +23,9 @@ class TestDseTextForTbs extends GroovyTestCase {
 
     Integer expectedSize = 25
     assert linesList.size() == expectedSize
+    linesList.each {
+      System.err.println "Class of line: " + it.getClass()
+    }
   }
 
 

@@ -6,6 +6,7 @@ import edu.harvard.chs.cite.CtsUrn
 import edu.harvard.chs.cite.CiteUrn
 
 import edu.holycross.shot.hocuspocus.Corpus
+import edu.holycross.shot.hocuspocus.TabUtil
 import edu.holycross.shot.prestochango.CollectionArchive
 
 import au.com.bytecode.opencsv.CSVReader
@@ -44,6 +45,18 @@ class DseManager {
    ArrayList textNodesForSurface(String artifactStr) 
   */
   
+  ArrayList tabDataForSurface(String artifactStr, Corpus corpus, File tabDir)  {
+    def txtNodesForSurface = this.textNodesForSurface(artifactStr)
+    corpus.tabulateRepository(tabDir)
+    def ctsUrns = this.textNodesForSurface(artifactStr)
+    TabUtil tab = new TabUtil()
+    println "tabDataForSurface:  urns: " + ctsUrns
+    return tab.tabEntriesForDirectory(tabDir, ctsUrns)    
+  }
+
+  
+
+
 
 
 

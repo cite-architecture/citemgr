@@ -7,13 +7,11 @@ buildscript {
     }
     dependencies {
 
-      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.10.8'
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.3'
     }
 }
 
 import edu.holycross.shot.hocuspocus.Corpus
-
-
 
 
 apply plugin: "base"
@@ -303,7 +301,6 @@ artifacts {
   rdf zipTtl
   lib jar
 }
-
 
 
 task cleanTest () {
