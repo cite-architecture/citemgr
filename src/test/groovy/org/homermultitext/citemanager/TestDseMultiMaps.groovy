@@ -12,9 +12,6 @@ class TestDseMultiMaps extends GroovyTestCase {
 
   File dataDir = new File("testdata/dse2")
 
-  File iliadImgIndex = new File(dataDir,"iliadToFolio.csv")
-  File scholiaImgIndex = new File(dataDir,"scholiaToTbs.csv")
-  ArrayList indexFiles = [scholiaImgIndex, iliadImgIndex] 
 
   CiteUrn folio = new CiteUrn ("urn:cite:hmt:msA.137v")
   CiteUrn img = new CiteUrn("urn:cite:hmt:vaimg.VA137VN-0639")
@@ -22,19 +19,17 @@ class TestDseMultiMaps extends GroovyTestCase {
 
   Integer expectedSize = 50
 
-  @Test void testTextTbsIndex() {
-    DseManager dsemgr = new DseManager()
-
-    dsemgr.textTbsIndexFiles = indexFiles
-    def matches = dsemgr.textNodesForSurface(folio)
-
-    assert matches.size() == expectedSize
-  }
-
-
-  @Test void testTextImageIndex() {
+  @Test void testTextIndices() {
     DseManager dsemgr = new DseManager()
     dsemgr.debug = 5
+
+    File iliadImgIndex = new File(dataDir,"iliadToFolio.csv")
+    File scholiaImgIndex = new File(dataDir,"scholiaToTbs.csv")
+
+    dsemgr.textTbsIndexFiles = [scholiaImgIndex, iliadImgIndex] 
+
+    def folioMatches = dsemgr.textNodesForSurface(folio)
+    assert folioMatches.size() == expectedSize
 
     dsemgr.textImageIndexFiles = 
     [
@@ -42,8 +37,14 @@ class TestDseMultiMaps extends GroovyTestCase {
       new File(dataDir, "venA-textToImage-Iliad.csv")
     ]
 
-    def matches =    dsemgr.textNodesForImage(img)
-    assert matches.size() == expectedSize    
+    def imgMatches =    dsemgr.textNodesForImage(img)
+    assert imgMatches.size() == expectedSize
+  }
+
+
+  @Test void testMore() {
+
+
   }
 
 

@@ -35,6 +35,18 @@ class DseManager {
   DseManager()   {
   }
 
+  //////////////// METHODS FOR GETTING TABULAR DATA FROM DSE RELATIONS ////////////////
+  
+
+  /* USE THIS:
+   * @returns A list of CTS URN values.
+   * @throws Exception if artifactStr is not a valid CiteUrn.
+   ArrayList textNodesForSurface(String artifactStr) 
+  */
+  
+
+
+
 
   String getVisualInventoryXml (String urnStr) 
   throws Exception {
@@ -47,7 +59,7 @@ class DseManager {
    }
 
 
-  // exception of not configured
+  // exception if not configured
   String getVisualInventoryXml (CiteUrn tbsUrn)  
   throws Exception {
     def defaultImageUrn = this.imageForTbs(tbsUrn)
@@ -91,7 +103,13 @@ class DseManager {
   }
 
 
-
+  /** Cycles through all files in textImageIndexFiles, and creates 
+   * map of text passages indexed to a given image.
+   * @param urnStr URN of the image to map, as a String.
+   * @returns The map expressed as a CITE graph in
+   * XML.
+   * @throws Exception if urnStr is not a valid URN.
+   */
   LinkedHashMap imageMapsByText(String urnStr) 
   throws Exception {
     try {
@@ -104,13 +122,10 @@ class DseManager {
     }
   }
 
-
-
-
-  /** Creates map of texts indexed to a given image.
+  /** Cycles through all files in textImageIndexFiles, and creates 
+   * map of text passages indexed to a given image.
    * @param img The image to map.
-   * @returns The map expressed as a CITE graph in
-   * XML.
+   * @returns The map expressed as a CITE graph in XML.
    */
   LinkedHashMap imageMapsByText(CiteUrn img) {
     if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
@@ -120,7 +135,14 @@ class DseManager {
     // cycle all index files, and invoke textNodesForImage with file
     this.textImageIndexFiles.each { f ->
       def singleMap = this.imageMapsByText(img, f)
+
       nodeMap << singleMap
+      if (debug > 0) {
+	println "file ${f}: map:"
+	println singleMap
+	println "node map now : " 
+	println "${nodeMap}\n\n"
+      }
     }
     return nodeMap
   }
@@ -128,7 +150,13 @@ class DseManager {
 
 
 
-
+  /** Creates a map of texts indexed to a given image in a given
+   * index file.
+   * @param imgStr The URN of the image to map, as a String value.
+   * @param indexFile The index file to use.
+   * @returns The map expressed as a CITE graph in XML.
+   * @throws Exception if imgStr is not a valid CITE URN.
+   */
   LinkedHashMap imageMapsByText(String imgStr, File indexFile) 
   throws Exception {
     try {
@@ -140,7 +168,12 @@ class DseManager {
     }
   }
 
-
+  /** Creates a map of texts indexed to a given image in a given
+   * index file.
+   * @param img The image to map.
+   * @param indexFile The index file to use.
+   * @returns The map expressed as a CITE graph in XML.
+   */
   LinkedHashMap imageMapsByText(CiteUrn img, File indexFile) {
     def results = [:]
 
@@ -156,6 +189,7 @@ class DseManager {
 	    if (results[doc]) {
 	      imgGroup = results[doc]
 	    }
+
 	    imgGroup.add([ln[0],ln[1]])
 	    results[doc] = imgGroup
 	  }
@@ -514,5 +548,8 @@ class DseManager {
     }
 
   }
-  
+
+
+ 
+
 }
