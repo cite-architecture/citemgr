@@ -47,7 +47,14 @@ class DseManager {
 
 
 
-
+  /** Creates the CITE graph representation of all relations
+   * indexed to the default image of given text-bearing surface.
+   * @param urnStr CITE URN of a text-bearing surface, as a String value
+   * @returns CITE graph XML, with link to XSL for human 
+   * reading as a web page.
+   * @throws Exception if DSE relations are not configured, or if
+   * urnStr is not a valid CITE URN.
+   */
   String getVisualInventoryXml (String urnStr) 
   throws Exception {
     try {
@@ -59,7 +66,13 @@ class DseManager {
    }
 
 
-  // exception if not configured
+  /** Creates the CITE graph representation of all relations
+   * indexed to the default image of given text-bearing surface.
+   * @param tbsUrn CITE URN of a text-bearing surface.
+   * @returns CITE graph XML, with link to XSL for human 
+   * reading as a web page.
+   * @throws Exception if DSE relations are not configured.
+   */
   String getVisualInventoryXml (CiteUrn tbsUrn)  
   throws Exception {
     def defaultImageUrn = this.imageForTbs(tbsUrn)
@@ -203,7 +216,21 @@ class DseManager {
     return results
   }
 
-
+  /** Performs DSE validation for a given
+   * text-bearing surface. Checks for referntial integrity
+   * across the three edges of the DSE triangle:
+   *
+   * 1. image to TBS
+   * 2. text to TBS
+   * 3. text to image
+   * 
+   * Tests currently verify that a single default image is
+   * indexed to TBS, that an identical set of text nodes are indexed
+   * to TBS and the default image.
+   *
+   * @param urnStr URN of the text-bearing surface to validate, as a String value.
+   * @returns True if all tests pass.
+   */
   boolean verifyTbs(String urnStr) 
   throws Exception {
     try {
