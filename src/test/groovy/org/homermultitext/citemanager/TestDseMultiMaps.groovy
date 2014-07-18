@@ -39,6 +39,9 @@ class TestDseMultiMaps extends GroovyTestCase {
 
     def imgMatches =    dsemgr.textNodesForImage(img)
     assert imgMatches.size() == expectedSize
+
+
+    assert imgMatches as Set == folioMatches as Set
   }
 
 
