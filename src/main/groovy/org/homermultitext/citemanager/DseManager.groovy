@@ -50,7 +50,7 @@ class DseManager {
     corpus.tabulateRepository(tabDir)
     def ctsUrns = this.textNodesForSurface(artifactStr)
     TabUtil tab = new TabUtil()
-    println "tabDataForSurface:  urns: " + ctsUrns
+    if (debug > 0) { println "tabDataForSurface:  urns: " + ctsUrns }
     return tab.tabEntriesForDirectory(tabDir, ctsUrns)    
   }
 
