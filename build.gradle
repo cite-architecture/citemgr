@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
 
-      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.3'
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.4'
     }
 }
 

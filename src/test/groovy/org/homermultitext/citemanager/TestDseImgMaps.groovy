@@ -25,7 +25,7 @@ class TestDseImgMaps extends GroovyTestCase {
     def linesMap = dsemgr.imageMapsByText(imgStr, dsemgr.textImageIndexFiles[0])
     assert linesMap.keySet().size() == 1
 
-    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA"
+    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA:"
     Integer expectedMappings = 25
 
     linesMap.keySet().each { k ->
@@ -44,7 +44,7 @@ class TestDseImgMaps extends GroovyTestCase {
     def linesMap = dsemgr.imageMapsByText(imgStr)
     assert linesMap.keySet().size() == 1
 
-    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA"
+    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA:"
     Integer expectedMappings = 25
 
     linesMap.keySet().each { k ->

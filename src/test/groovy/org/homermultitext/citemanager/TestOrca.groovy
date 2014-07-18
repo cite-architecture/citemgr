@@ -15,7 +15,12 @@ class TestOrca extends GroovyTestCase {
     outDir.mkdir()
 
     Orca orca = new Orca()
-    orca.generate(orcaData,separator,outDir)    
+    try {
+      orca.generate(orcaData,separator,outDir)    
+    } catch (Exception e) {
+      File capture = new File("/tmp/oracTestBomb.txt")
+      capture.setText(e.toString(), "UTF-8")
+    }
     
   }
 
