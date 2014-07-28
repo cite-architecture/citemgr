@@ -115,8 +115,17 @@ class PrestochangoTurtleizer {
    * output directory.
    */
   void generateTurtle() {
-    CollectionArchive cc = new CollectionArchive(this.collectionInventory, this.inventorySource, this.dataDirectory)
+    CollectionArchive cc 
+    try {
+      cc = new CollectionArchive(this.collectionInventory, this.inventorySource, this.dataDirectory)
+
+    } catch (Exception e) {
+      System.err.println "Failed to build Collection archive with parameters:"
+      System.err.println " \tinventory ${this.collectionInventory}"
+      System.err.println " \tinventory source ${this.inventorySource}"
+      System.err.println " \tdata directory ${this.dataDirectory}"
+      throw (e)
+    }
     cc.ttl(turtleOutput, includePrefix)
   }
-
 }
