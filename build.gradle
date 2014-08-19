@@ -8,10 +8,12 @@ buildscript {
     dependencies {
 
       classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.4'
+      classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.1'
     }
 }
 
 import edu.holycross.shot.hocuspocus.Corpus
+import edu.holycross.shot.prestochango.CollectionArchive
 
 
 apply plugin: "base"
@@ -197,8 +199,17 @@ task imgttl (type: JavaExec, dependsOn: compileGroovy) {
     }
 }
 
+task squawk {
+}
+squawk.doLast {
+  def ccSettings = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
+  println "Settings for CC TTL:"
+  ccSettings.each {
+    println "\t" + it
+  }
+}
 
-task ccttl (type: JavaExec, dependsOn: compileGroovy) {
+/*task ccttl (type: JavaExec, dependsOn: [squawk, compileGroovy]) {
     description = "Generates RDF for Collections configured for prestochango"
     main = "org.homermultitext.citemanager.PrestochangoTurtleizer"
     args = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
@@ -206,8 +217,29 @@ task ccttl (type: JavaExec, dependsOn: compileGroovy) {
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
 
+    }*/
+
+task ccttl (dependsOn: compileGroovy) {
+  description = "Generates RDF for Collections configured for prestochango"
 }
 
+ccttl.doLast {
+  File schemaFile = new File("schemas/cite/CiteCollectionInventory.rng")
+
+  File invFile = new File(collinv)
+  File archiveDir = new File(collarchive)
+  CollectionArchive cc = new CollectionArchive(invFile, schemaFile, archiveDir)
+
+  if (! buildDir.exists()) {
+    buildDir.mkdir
+  }
+  File ttlDir = new File(buildDir, "ttl")
+  if (! ttlDir.exists()) {
+    ttlDir.mkdir()
+  }
+  File testOut = new File(ttlDir, "collections.ttl")
+  cc.ttl(testOut, prefix)
+}
 
 task idxttl (type: JavaExec, dependsOn: compileGroovy) {
     description = "Generates RDF for indices configured for abracadabra"

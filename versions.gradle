@@ -10,7 +10,7 @@ project.ext {
 
     greekutilsVersion = "0.8.5"
 
-    citeVersion = "0.81.1"
+    citeVersion = "0.90.0"
 
     jingVersion = "20091111"
     saxonVersion = "8.7"
@@ -18,7 +18,7 @@ project.ext {
     nysiVersion = "0.1.12"
     abracadabraVersion = "0.1.5"
     prestochangoVersion = "0.2.12"
-    hocuspocusVersion = "0.11.4"
+    hocuspocusVersion = "0.11.5"
 
     junitVersion = "4.8.2"
     xmlunitVersion = "1.3"
