@@ -242,7 +242,7 @@ imgttl.doLast {
   }
   File ttlFile = new File(rdfDir,"citeimgs.ttl")
    
- ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
+  ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
   imgttl.ttl(ttlFile, prefix)
 }
 
