@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
       classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.5'
-      classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.1'
+      classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.2'
       classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: '0.2.4'
       classpath group: 'edu.holycross.shot', name : 'nysi' , version: '0.2.2'
     }
@@ -205,7 +205,26 @@ task ctsttl() {
 ctsttl.doFirst {
   System.err.println "ctsttl will use inventory ${ctsinventory}"
   System.err.println "and archive ${ctsarchive}"
+
+
 }
+ctsttl.doLast {
+  if (! buildDir.exists()) {
+    buildDir.mkdir()
+  }
+
+  File inv = new File("${ctsinventory}")
+  File archiveDir = new File("${ctsarchive}")
+  Corpus c = new Corpus(inv,archiveDir)
+
+  File ttlDir = new File(buildDir, "ttl")
+  if (! ttlDir.exists()) {
+    ttlDir.mkdir()
+  }
+  File ttlFile = new File(ttlDir,"cts.ttl")
+  c.ttl(ttlFile, prefix, ttlDir)
+}
+
 
 
 task filterImgs(type: Copy) {
@@ -227,25 +246,17 @@ imgttl.doLast {
     rdfDir.mkdir()
   }
   File ttlFile = new File(rdfDir,"citeimgs.ttl")
-  
-  ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
+   
+ ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
   imgttl.ttl(ttlFile, prefix)
 }
 
-/*task ccttl (type: JavaExec, dependsOn: [squawk, compileGroovy]) {
-    description = "Generates RDF for Collections configured for prestochango"
-    main = "org.homermultitext.citemanager.PrestochangoTurtleizer"
-    args = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
 
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
 
-    }*/
 
 task ccttl {
   description = "Generates RDF for Collections configured for prestochango"
 }
-
 ccttl.doLast {
   boolean prefix = project.hasProperty("prefix-all")
 
@@ -256,7 +267,7 @@ ccttl.doLast {
   CollectionArchive cc = new CollectionArchive(invFile, schemaFile, archiveDir)
 
   if (! buildDir.exists()) {
-    buildDir.mkdir
+    buildDir.mkdir()
   }
   File ttlDir = new File(buildDir, "ttl")
   if (! ttlDir.exists()) {
@@ -266,15 +277,41 @@ ccttl.doLast {
   cc.ttl(testOut, prefix)
 }
 
+
+
+// REPLACE THIS
+/*
 task idxttl (type: JavaExec, dependsOn: compileGroovy) {
-    description = "Generates RDF for indices configured for abracadabra"
+
     main = "org.homermultitext.citemanager.AbracadabraTurtleizer"
-    args = ["${idxinv}", "${idxarchive}", "${buildDir}/ttl", "indices.ttl", "${prefix}"]
+  
 
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
 
+}*/
+
+task idxttl () {
+  description = "Generates RDF for indices configured for abracadabra"
 }
+idxttl.doLast {
+  boolean prefix = project.hasProperty("prefix-all")
+
+  File inv = new File("${idxinv}")
+  File idxDir = new File("${idxarchive}")
+  CiteIndex idx = new CiteIndex(inv, idxDir)
+
+  if (! buildDir.exists()) {
+    buildDir.mkdir()
+  }
+  File ttlDir = new File(buildDir, "ttl")
+  if (! ttlDir.exists()) {
+    ttlDir.mkdir()
+  }
+  File outFile = new  File (ttlDir,"indices.ttl")
+  idx.ttl(outFile, prefix)
+}
+
 
 task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
   description = "Concatenates separate TTL files into a single graph."
