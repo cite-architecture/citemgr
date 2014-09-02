@@ -6,15 +6,19 @@ buildscript {
 	}
     }
     dependencies {
-
-      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.4'
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.5'
       classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.1'
+      classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: '0.2.4'
+      classpath group: 'edu.holycross.shot', name : 'nysi' , version: '0.2.2'
     }
 }
 
 import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.prestochango.CollectionArchive
+import edu.holycross.shot.abracadabra.CiteIndex
+import edu.holycross.shot.nysi.ImgTurtleizer
 
+import org.apache.tools.ant.filters.*
 
 apply plugin: "base"
 apply plugin:  "groovy"
@@ -76,7 +80,7 @@ if (hasProperty('conf')) {
 
 group = "org.homermultitext"
 
-version = '0.4.9'
+version = '0.5.0'
 
 repositories {
     mavenCentral()
@@ -116,6 +120,15 @@ dependencies {
   testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
 }
 
+task squawk {
+}
+squawk.doLast {
+  def ccSettings = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
+  println "Settings for CC TTL:"
+  ccSettings.each {
+    println "\t" + it
+  }
+}
 
 
 task checkti(type: JavaExec, dependsOn: compileGroovy) {
@@ -172,6 +185,10 @@ ctstab.doLast() {
 }
 
 
+
+
+
+/*
 task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
      description = "Generates TTL statements about text contents"
 
@@ -181,32 +198,38 @@ task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
 }
-
+*/
+task ctsttl() {
+  description = "Generates TTL statements about text contents"
+}
 ctsttl.doFirst {
   System.err.println "ctsttl will use inventory ${ctsinventory}"
   System.err.println "and archive ${ctsarchive}"
 }
 
-task imgttl (type: JavaExec, dependsOn: compileGroovy) {
-    description = "Generates RDF for configured NYSI"
-    main = "org.homermultitext.citemanager.NysiTurtleizer"
-    args = ["${imgcolldir}", "${imgdatadir}", "${buildDir}/ttl", "citeimgs.ttl", "${prefix}"]
 
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
-    doFirst {
-        System.err.println "\nTTLize images with ${args}\n"
-    }
-}
-
-task squawk {
-}
-squawk.doLast {
-  def ccSettings = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
-  println "Settings for CC TTL:"
-  ccSettings.each {
-    println "\t" + it
+task filterImgs(type: Copy) {
+  description = "Filter copies configurable image collection info."
+  from (file(imgcolldir)) {
+    include '*.csv'
   }
+  filter(ReplaceTokens, tokens : [pyramids : pyramids] )
+  into "${buildDir}/images"
+}
+task imgttl(dependsOn: [filterImgs]) {
+  description = "Generates RDF for configured NYSI"
+}
+imgttl.doLast {
+  boolean prefix = project.hasProperty("prefix-all")
+
+  File rdfDir = new File("${buildDir}/ttl")
+  if (! rdfDir.exists()) {
+    rdfDir.mkdir()
+  }
+  File ttlFile = new File(rdfDir,"citeimgs.ttl")
+  
+  ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
+  imgttl.ttl(ttlFile, prefix)
 }
 
 /*task ccttl (type: JavaExec, dependsOn: [squawk, compileGroovy]) {
@@ -219,11 +242,13 @@ squawk.doLast {
 
     }*/
 
-task ccttl (dependsOn: compileGroovy) {
+task ccttl {
   description = "Generates RDF for Collections configured for prestochango"
 }
 
 ccttl.doLast {
+  boolean prefix = project.hasProperty("prefix-all")
+
   File schemaFile = new File("schemas/cite/CiteCollectionInventory.rng")
 
   File invFile = new File(collinv)
