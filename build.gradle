@@ -185,20 +185,6 @@ ctstab.doLast() {
 }
 
 
-
-
-
-/*
-task ctsttl(type: JavaExec, dependsOn: compileGroovy) {
-     description = "Generates TTL statements about text contents"
-
-    main = "org.homermultitext.citemanager.HocusPocusTurtleizer"
-    args = ["${ctsinventory}", "${ctsarchive}", "${buildDir}/ttl", "cts.ttl", "${prefix}"]
-
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
-}
-*/
 task ctsttl() {
   description = "Generates TTL statements about text contents"
 }
@@ -213,18 +199,27 @@ ctsttl.doLast {
     buildDir.mkdir()
   }
 
-  File inv = new File("${ctsinventory}")
-  File archiveDir = new File("${ctsarchive}")
-  Corpus c = new Corpus(inv,archiveDir)
+  File inv
+  File archiveDir
 
-  File ttlDir = new File(buildDir, "ttl")
-  if (! ttlDir.exists()) {
-    ttlDir.mkdir()
+  if ((ctsinventory != "") && (ctsarchive != "")) {
+    try {
+      inv = new File("${ctsinventory}")
+      archiveDir = new File("${ctsarchive}")
+    } catch (Exception e) {
+      System.err.println "ctsttl: unable to create inventory and archive!"
+      throw e
+    }
+    Corpus c = new Corpus(inv,archiveDir)
+
+    File ttlDir = new File(buildDir, "ttl")
+    if (! ttlDir.exists()) {
+      ttlDir.mkdir()
+    }
+    File ttlFile = new File(ttlDir,"cts.ttl")
+    c.ttl(ttlFile, prefix, ttlDir)
   }
-  File ttlFile = new File(ttlDir,"cts.ttl")
-  c.ttl(ttlFile, prefix, ttlDir)
 }
-
 
 
 task filterImgs(type: Copy) {
@@ -278,38 +273,35 @@ ccttl.doLast {
 }
 
 
-
-// REPLACE THIS
-/*
-task idxttl (type: JavaExec, dependsOn: compileGroovy) {
-
-    main = "org.homermultitext.citemanager.AbracadabraTurtleizer"
-  
-
-    classpath sourceSets.main.output.classesDir
-    classpath configurations.runtime
-
-}*/
-
 task idxttl () {
   description = "Generates RDF for indices configured for abracadabra"
 }
 idxttl.doLast {
   boolean prefix = project.hasProperty("prefix-all")
 
-  File inv = new File("${idxinv}")
-  File idxDir = new File("${idxarchive}")
-  CiteIndex idx = new CiteIndex(inv, idxDir)
+  File inv 
+  File idxDir
 
-  if (! buildDir.exists()) {
-    buildDir.mkdir()
+  if ((idxinv != "") && (idxarchive != ""))   {
+    try {
+      inv = new File("${idxinv}")
+      idxDir = new File("${idxarchive}")
+    } catch (Exception e) {
+      System.err.println "idxttl: unable to make index inventory and archive."
+      throw e
+    }
+    CiteIndex idx = new CiteIndex(inv, idxDir)
+
+    if (! buildDir.exists()) {
+      buildDir.mkdir()
+    }
+    File ttlDir = new File(buildDir, "ttl")
+    if (! ttlDir.exists()) {
+      ttlDir.mkdir()
+    }
+    File outFile = new  File (ttlDir,"indices.ttl")
+    idx.ttl(outFile, prefix)
   }
-  File ttlDir = new File(buildDir, "ttl")
-  if (! ttlDir.exists()) {
-    ttlDir.mkdir()
-  }
-  File outFile = new  File (ttlDir,"indices.ttl")
-  idx.ttl(outFile, prefix)
 }
 
 
