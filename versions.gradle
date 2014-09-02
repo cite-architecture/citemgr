@@ -17,7 +17,7 @@ project.ext {
 
     nysiVersion = "0.2.2"
     abracadabraVersion = "0.2.4"
-    prestochangoVersion = "0.3.2"
+    prestochangoVersion = "0.3.3"
     hocuspocusVersion = "0.11.5"
 
     junitVersion = "4.8.2"
