@@ -1,3 +1,5 @@
+import com.github.rjeschke.txtmark.*
+
 buildscript {
     repositories {
         mavenCentral()
@@ -6,6 +8,7 @@ buildscript {
 	}
     }
     dependencies {
+      classpath group: 'com.github.rjeschke', name: 'txtmark', version: '0.11'
       classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.5'
       classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.3'
       classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: '0.2.4'
@@ -115,8 +118,12 @@ dependencies {
   // needed for hocuspocus:
   compile group: 'com.thaiopensource', name:'jing', version: jingVersion
   compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
-    
-  testCompile group: 'junit', name: 'junit', version: junitVersion
+
+
+  testCompile 'junit:junit:4.11'
+  testCompile 'org.concordion:concordion:1.4.4'
+  
+  //testCompile group: 'junit', name: 'junit', version: junitVersion
   testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
 }
 
@@ -230,6 +237,10 @@ task filterImgs(type: Copy) {
   filter(ReplaceTokens, tokens : [pyramids : pyramids] )
   into "${buildDir}/images"
 }
+filterImgs.doFirst {
+  println "Filter copy images in " + imgcolldir
+}
+
 task imgttl(dependsOn: [filterImgs]) {
   description = "Generates RDF for configured NYSI"
 }
@@ -243,6 +254,15 @@ imgttl.doLast {
   File ttlFile = new File(rdfDir,"citeimgs.ttl")
    
   ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
+
+  File imageDir = new File("${buildDir}/images")
+  if (! buildDir.exists()) {
+    buildDir.mkdir()
+  }
+  if (! imageDir.exists()) {
+    imageDir.mkdir()
+  }
+
   imgttl.ttl(ttlFile, prefix)
 }
 
@@ -252,6 +272,29 @@ imgttl.doLast {
 task ccttl {
   description = "Generates RDF for Collections configured for prestochango"
 }
+/*
+ccttl.doLast {
+  String schemaFileName = "schemas/cite/CiteCollectionInventory.rng"
+  File csvInv = new File(collinv)
+
+  println "ARCHIVE: " + collarchive
+
+  //String csvDataDir = "/Users/nsmith/Desktop/citevm/repositories/op/collections"
+  //File csvDir = new File(csvDataDir)
+  File csvDir = new File(collarchive)
+
+  CollectionArchive cc = new CollectionArchive(csvInv, schemaFileName, csvDir)
+
+  cc.debug = 5
+
+  if (! buildDir.exists()) {
+    buildDir.mkdir()
+  }
+  File testOut = new File("${buildDir}/opOut.ttl")
+  cc.ttl(testOut)
+  System.err.println "TTL in ${testOut}"
+}*/
+
 ccttl.doLast {
   boolean prefix = project.hasProperty("prefix-all")
 
@@ -260,7 +303,9 @@ ccttl.doLast {
   File invFile = new File(collinv)
   File archiveDir = new File(collarchive)
   CollectionArchive cc = new CollectionArchive(invFile, schemaFile, archiveDir)
-
+  //cc.debug = 5
+  println "\nFrom inventory in ${collinv} and data in ${collarchive}:"
+  println "\tCollection list:  " + cc.getCollectionList() + "\n"
   if (! buildDir.exists()) {
     buildDir.mkdir()
   }
@@ -416,4 +461,72 @@ uploadLib {
   doLast {
     System.err.println "Code library uploaded."
   }
+}
+
+
+
+// for specs with concordion:
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src'
+        }
+    }
+    test {
+        java {
+	  srcDir "specs/java"
+        }
+        resources {
+	  srcDir "${buildDir}/specs"
+        }
+    }
+}
+
+task cpResources(type: Copy) {
+  from "specs/resources"
+  into "${buildDir}/specs"
+}
+
+task setUpResources(dependsOn: cpResources) {
+}
+setUpResources.doLast {
+  println "READING FILE TREE FROM " + mdSrc
+  FileTree tree = fileTree(mdSrc) {
+    include "**/*.md"
+  }
+  tree.visit { f ->
+    if (f.relativePath.isFile()) {
+      File inFile = new File("${mdSrc}/${f.relativePath}")
+      println "Need to work on " + inFile
+      def segs = f.relativePath.getSegments()
+      String treePath = "${buildDir}/specs"
+      Integer limit =  segs.size() - 1
+      segs.eachWithIndex { s, i ->
+	if (i < limit) {
+	  treePath = "${treePath}/${s}"
+	  File nxtDir = new File(treePath)
+	  if (! nxtDir.exists()) {
+	    nxtDir.mkdir()
+	  }
+	}
+      }
+      File outDir = new File(treePath)
+      String htmlFileName = f.relativePath.getLastName().replaceFirst(/.md$/,".html")
+      File htmlFile = new File(outDir, htmlFileName)
+      println "Created ${htmlFile}"
+
+      String body = Processor.process(inFile.getText("UTF-8"),Configuration.DEFAULT)
+      htmlFile.setText("${htmlPreface}${body}${htmlEnd}", "UTF-8")
+    }
+  }
+}
+
+
+test.dependsOn setUpResources
+test {
+    systemProperties 'concordion.output.dir': file("${buildDir}/concordion-results")
+
 }

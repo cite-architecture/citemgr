@@ -16,15 +16,15 @@ import au.com.bytecode.opencsv.CSVReader
  */
 class DseManager {
 
-  Integer debug = 0
+  public Integer debug = 0
 
 
   /** List of files indexing text-bearing surfaces to images. */
-  ArrayList tbsImageIndexFiles
+  public ArrayList tbsImageIndexFiles = new ArrayList()
   /** List of files indexing text nodes to images. */
-  ArrayList textImageIndexFiles
+  public ArrayList textImageIndexFiles = new ArrayList()
   /** List of files indexing text nodes to text-bearing surfaces. */
-  ArrayList textTbsIndexFiles
+  public ArrayList textTbsIndexFiles = new ArrayList()
 
   /** Xsl stylesheet for formatting web page from XML
    * expressing a CITE graph
@@ -36,6 +36,11 @@ class DseManager {
   DseManager()   {
   }
 
+
+
+
+
+  
   //////////////// METHODS FOR GETTING TABULAR DATA FROM DSE RELATIONS ////////////////
   
 
@@ -529,6 +534,9 @@ class DseManager {
 
     CiteUrn defaultImage = null
     this.tbsImageIndexFiles.each { f ->
+      if (debug > 1) {
+	System.err.println "DseMgr:imageForTbs: examine file " + f + " of class " + f.getClass()
+      }
       CiteUrn imgUrn = this.imageForTbs(urn,f)
       if (imgUrn != null) {
        defaultImage = imgUrn
@@ -567,7 +575,11 @@ class DseManager {
   CiteUrn imageForTbs(CiteUrn urn, File indexFile) 
   throws Exception {
     def lines = indexFile.readLines()
-    def indexRecord = lines.grep( ~/^.+${urn}"?,.+$/ ) 
+    def indexRecord =  lines.grep( ~/^.*${urn}"?,.+$/ ) 
+    if (debug > 1) {
+      System.err.println "Grepping for ${urn} yielded " + indexRecord + " of size " + indexRecord.size()
+      }
+
 
     switch (indexRecord.size()) {
     case 0:
