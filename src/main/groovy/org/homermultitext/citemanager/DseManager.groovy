@@ -143,10 +143,9 @@ class DseManager {
    */
   LinkedHashMap imageMapsByText(String urnStr) 
   throws Exception {
-    System.err.println ("Get maps for urn with string val " + urnStr)
+    if (debug > 0)  { System.err.println ("Get maps for urn with string val " + urnStr) }
     try {
       CiteUrn u = new CiteUrn(urnStr)
-      System.err.println "Getting map for string " + urnStr
       return imageMapsByText(u)
 
     } catch (Exception e) {
@@ -160,7 +159,7 @@ class DseManager {
    * @returns The map expressed as a CITE graph in XML.
    */
   LinkedHashMap imageMapsByText(CiteUrn img) {
-    System.err.println("Find mappings for " + img)
+    if (debug > 0) {    System.err.println("Find mappings for " + img)}
 
     
     if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
@@ -173,7 +172,6 @@ class DseManager {
 	System.err.println "DseMgr:imageMapsByText: examine " + f
       }
       def singleMap = this.imageMapsByText(img, f)
-      //System.err.println ("text image index now " + dse.textImageIndexFiles);
       if (debug > 0) {
 	System.err.println "DseMgr:imageMapsByText: got map " + singleMap
       }
@@ -218,9 +216,10 @@ class DseManager {
    */
   LinkedHashMap imageMapsByText(CiteUrn img, File indexFile) {
     def results = [:]
-
-    System.err.println("DseMgr:imageMapsByText for file " + indexFile)
-    System.err.println("Its text contens = " + indexFile.readLines().size() + " lines.")
+    if (debug > 1) {
+      System.err.println("DseMgr:imageMapsByText for file " + indexFile)
+      System.err.println("Its text contens = " + indexFile.readLines().size() + " lines.")
+    }
     
     if ( !indexFile.getName() ==~ /.+csv/) {
       System.err.println "Only dealing with csv:  no match for " + indexFile
@@ -327,7 +326,6 @@ class DseManager {
   // report on a single page
   def dseReport(CiteUrn urn) {
     def tbsToImgReport = []
-
     
     CiteUrn img = imageForTbs(urn)
     if (! img) {
@@ -336,19 +334,25 @@ class DseManager {
       tbsToImgReport = [true, img.toString()]
     }
 
-
     def txtNodesForImage = this.textNodesForImage(img)
     if (debug > 0) {
       System.err.println "Text for Image:" + txtNodesForImage
     }
     // B. collect all text nodes for TBS
     def txtNodesForSurface = this.textNodesForSurface(urn)
-    boolean validMapping = true
+    boolean validMapping = false
+    String cf
     // should be set-identical
     if (txtNodesForSurface as Set == txtNodesForImage as Set) {
      validMapping = true
+     cf = "For image ${img}, ${txtNodesForImage.size()} text units match ${txtNodesForSurface.size()} text units for surface ${urn}."
+    } else {
+      cf =   "Different sets of texts mapped to image ${img} (${txtNodesForImage.size()} text units) and to surface ${urn} (${txtNodesForSurface.size()} text units)."
+      System.err.println "dseRept: mismatch between mappings:"
+      System.err.println "txtNodesForSurface: ${txtNodesForSurface}"
+      System.err.println "txtNodesForImage: ${txtNodesForImage}"
     }
-    String cf = "For image ${img}, ${txtNodesForImage.size()} text units; for surface ${urn}, ${txtNodesForSurface.size()} text units."
+
     def mappingReport = [validMapping, cf]
 
     def report = [tbsToImgReport, mappingReport]
