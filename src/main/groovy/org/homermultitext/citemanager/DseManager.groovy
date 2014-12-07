@@ -93,7 +93,7 @@ class DseManager {
    */
   String getVisualInventoryXml (CiteUrn tbsUrn)  
   throws Exception {
-    def defaultImageUrn = this.imageForTbs(tbsUrn)
+    CiteUrn defaultImageUrn = this.imageForTbs(tbsUrn)
     def imgMaps = imageMapsByText(defaultImageUrn)
 
     String verb = "http://www.homermultitext.org/cite/rdf/illustrates"
@@ -143,6 +143,7 @@ class DseManager {
    */
   LinkedHashMap imageMapsByText(String urnStr) 
   throws Exception {
+    System.err.println ("Get maps for urn with string val " + urnStr)
     try {
       CiteUrn u = new CiteUrn(urnStr)
       System.err.println "Getting map for string " + urnStr
@@ -159,13 +160,23 @@ class DseManager {
    * @returns The map expressed as a CITE graph in XML.
    */
   LinkedHashMap imageMapsByText(CiteUrn img) {
+    System.err.println("Find mappings for " + img)
+
+    
     if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
       throw new Exception ("DseManager:imageMapsByText: no index files configured.")
     }
     def nodeMap = [:]
     // cycle all index files, and invoke textNodesForImage with file
     this.textImageIndexFiles.each { f ->
+      if (debug > 0) {
+	System.err.println "DseMgr:imageMapsByText: examine " + f
+      }
       def singleMap = this.imageMapsByText(img, f)
+      //System.err.println ("text image index now " + dse.textImageIndexFiles);
+      if (debug > 0) {
+	System.err.println "DseMgr:imageMapsByText: got map " + singleMap
+      }
 
       nodeMap << singleMap
       if (debug > 0) {
@@ -208,9 +219,20 @@ class DseManager {
   LinkedHashMap imageMapsByText(CiteUrn img, File indexFile) {
     def results = [:]
 
-    if (indexFile.toString() ==~ /.+csv/) {
+    System.err.println("DseMgr:imageMapsByText for file " + indexFile)
+    System.err.println("Its text contens = " + indexFile.readLines().size() + " lines.")
+    
+    if ( !indexFile.getName() ==~ /.+csv/) {
+      System.err.println "Only dealing with csv:  no match for " + indexFile
+    } else {
       CSVReader reader = new CSVReader(new FileReader(indexFile))
-      reader.readAll().each { ln ->
+      def things = reader.readAll()
+      if (debug > 0) {
+	System.err.println "imageMapsByText: from ${indexFile}, read " + things.size() + " entries"
+      }
+
+      things.each { ln ->
+	if (debug > 0) {println "Line " + ln }
 	// allow for incomplete entries...
 	if (ln.size() == 2) {
 	  String imgStr = ln[1]
@@ -226,10 +248,9 @@ class DseManager {
 	  }
 	}
       }
-    } else if (indexFile.toString() ==~ /.+tsv/) {
+      //} else if (indexFile.toString() ==~ /.+tsv/) {
       // implement tsv reading
-
-    } else {
+      //} else {
     }
     return results
   }
@@ -303,6 +324,36 @@ class DseManager {
   }
 
 
+  // report on a single page
+  def dseReport(CiteUrn urn) {
+    def tbsToImgReport = []
+
+    
+    CiteUrn img = imageForTbs(urn)
+    if (! img) {
+      tbsToImgReport = [false, null]
+    } else {
+      tbsToImgReport = [true, img.toString()]
+    }
+
+
+    def txtNodesForImage = this.textNodesForImage(img)
+    if (debug > 0) {
+      System.err.println "Text for Image:" + txtNodesForImage
+    }
+    // B. collect all text nodes for TBS
+    def txtNodesForSurface = this.textNodesForSurface(urn)
+    boolean validMapping = true
+    // should be set-identical
+    if (txtNodesForSurface as Set == txtNodesForImage as Set) {
+     validMapping = true
+    }
+    String cf = "For image ${img}, ${txtNodesForImage.size()} text units; for surface ${urn}, ${txtNodesForSurface.size()} text units."
+    def mappingReport = [validMapping, cf]
+
+    def report = [tbsToImgReport, mappingReport]
+    return report    
+  }
 
   //////////////// TRIO OF METHODS FOR TEXT -> SURFACE INDEX ////////////////
 

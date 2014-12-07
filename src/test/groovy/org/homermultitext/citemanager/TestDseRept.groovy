@@ -39,7 +39,18 @@ class TestDseRept extends GroovyTestCase {
     dsemgr.tbsImageIndexFiles = tbsImgArry
 
 
-    System.err.println dsemgr.dseReport(new CiteUrn(testPage))
+    def rept =  dsemgr.dseReport(new CiteUrn(testPage))
+    def imgRept = rept[0]
+
+    System.err.println "Image report: " + imgRept[1]
+    System.err.println "Image report: " + imgRept[0]
+    assert imgRept[0] == true
+
+    def mapRept = rept[1]
+    System.err.println "Mappings: " + mapRept[0]
+    System.err.println "Mappings: " + mapRept[1]
+    assert mapRept[0] == true
+    
   }
 
 

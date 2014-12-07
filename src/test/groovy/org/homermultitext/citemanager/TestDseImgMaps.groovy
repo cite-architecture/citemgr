@@ -19,13 +19,16 @@ class TestDseImgMaps extends GroovyTestCase {
 
   @Test void testTextImageIndex() {
     DseManager dsemgr = new DseManager()
+    dsemgr.debug = 10
     dsemgr.textImageIndexFiles = indexFiles
-    String imgStr = "urn:cite:hmt:vaimg.VA052RN-0053"   
+    String imgStr = "urn:cite:hmt:vaimg.VA052RN-0053"  
 
-    def linesMap = dsemgr.imageMapsByText(imgStr, dsemgr.textImageIndexFiles[0])
+    //    def linesMap = dsemgr.imageMapsByText(imgStr, dsemgr.textImageIndexFiles[0])
+
+    def linesMap = dsemgr.imageMapsByText(imgStr, textImgIndex)
     assert linesMap.keySet().size() == 1
 
-    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA:"
+    String expectedKey = "urn:cts:greekLit:tlg0012.tlg001.msA"
     Integer expectedMappings = 25
 
     linesMap.keySet().each { k ->
@@ -34,7 +37,7 @@ class TestDseImgMaps extends GroovyTestCase {
     }
   }
 
-
+  /*
 
   @Test void testAllIndexes() {
     DseManager dsemgr = new DseManager()
@@ -52,7 +55,7 @@ class TestDseImgMaps extends GroovyTestCase {
       assert linesMap[k].size() == expectedMappings
     }
 
-  }
+    }*/
 
 
 }
