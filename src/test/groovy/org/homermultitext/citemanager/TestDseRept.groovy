@@ -49,7 +49,7 @@ class TestDseRept extends GroovyTestCase {
     def mapRept = rept[1]
     System.err.println "Mappings: " + mapRept[0]
     System.err.println "Mappings: " + mapRept[1]
-    assert mapRept[0] == true
+    assert mapRept[0] == false
     
   }
 
