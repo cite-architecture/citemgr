@@ -343,11 +343,21 @@ class DseManager {
     boolean validMapping = false
     String cf
     // should be set-identical
-    if (txtNodesForSurface as Set == txtNodesForImage as Set) {
+    def surfSet = txtNodesForSurface as Set
+    def   imgSet  = txtNodesForImage as Set
+    if ( surfSet == imgSet) {
      validMapping = true
+
+     
+     
+
      cf = "For image ${img}, ${txtNodesForImage.size()} text units match ${txtNodesForSurface.size()} text units for surface ${urn}."
     } else {
-      cf =   "Different sets of texts mapped to image ${img} (${txtNodesForImage.size()} text units) and to surface ${urn} (${txtNodesForSurface.size()} text units)."
+
+      def disjunctSet = (surfSet + imgSet) - surfSet.intersect(imgSet)
+      cf = "Discrepancies between indexing for image ${img} and surface ${urn}:  ${disjunctSet}"
+      
+      //      cf =   "Different sets of texts mapped to image ${img} (${txtNodesForImage.size()} text units) and to surface ${urn} (${txtNodesForSurface.size()} text units)."
       System.err.println "dseRept: mismatch between mappings:"
       System.err.println "txtNodesForSurface: ${txtNodesForSurface}"
       System.err.println "txtNodesForImage: ${txtNodesForImage}"
