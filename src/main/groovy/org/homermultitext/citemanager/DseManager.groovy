@@ -356,11 +356,8 @@ class DseManager {
 
       def disjunctSet = (surfSet + imgSet) - surfSet.intersect(imgSet)
       cf = "Discrepancies between ${imgSet.size()} entries for image ${img} and ${surfSet.size()} entries for surface ${urn}:  ${disjunctSet}"
-      
-      //      cf =   "Different sets of texts mapped to image ${img} (${txtNodesForImage.size()} text units) and to surface ${urn} (${txtNodesForSurface.size()} text units)."
       System.err.println "dseRept: mismatch between mappings:"
-      System.err.println "txtNodesForSurface: ${txtNodesForSurface}"
-      System.err.println "txtNodesForImage: ${txtNodesForImage}"
+      System.err.println cf
     }
 
     def mappingReport = [validMapping, cf]
