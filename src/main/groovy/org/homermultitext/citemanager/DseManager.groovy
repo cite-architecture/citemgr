@@ -345,6 +345,10 @@ class DseManager {
     // should be set-identical
     def surfSet = txtNodesForSurface as Set
     def   imgSet  = txtNodesForImage as Set
+    if (debug > 0) {
+      System.err.println "\n\n-->Num. texts mapped to surface: " + txtNodesForSurface.size()
+      System.err.println "-->Num. texts mapped to image: " + txtNodesForImage.size() + "\n\n"
+    }
     if ( surfSet == imgSet) {
      validMapping = true
 
@@ -355,8 +359,8 @@ class DseManager {
     } else {
 
       def disjunctSet = (surfSet + imgSet) - surfSet.intersect(imgSet)
-      cf = "Discrepancies between ${imgSet.size()} entries for image ${img} and ${surfSet.size()} entries for surface ${urn}:  ${disjunctSet}"
-      System.err.println "dseRept: mismatch between mappings:"
+      cf = "Found the following discrepancies between ${imgSet.size()} entries for image ${img} and ${surfSet.size()} entries for surface ${urn}:  ${disjunctSet}"
+      System.err.println "DseManager:DseRept: mismatch between mappings"
       System.err.println cf
     }
 
@@ -444,7 +448,9 @@ class DseManager {
   ArrayList textNodesForSurface(CiteUrn urn, File indexFile) {
 
     def results = []
-    def indexRecord =  indexFile.readLines().grep( ~/^.+,"?${urn}"?/ ) 
+    def indexRecord =  indexFile.readLines().grep( ~/^.+,"?${urn}"?$/ )
+
+    //     def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
     if (debug > 0) {
       System.err.println "textNodesForSurface: file ${indexFile}, grepped " + indexRecord + " from " + urn
     }
@@ -549,6 +555,9 @@ class DseManager {
     def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
     indexRecord.each { ln ->
       String urnStr = ln.replaceFirst(/,.+/, '').replaceAll(/"/,'')
+
+      if (debug > 0) {System.err.println "textNodesForImage:  parse urnStr " + urnStr}
+
       try {
 	CtsUrn urn = new CtsUrn(urnStr)
 	results.add(urnStr)
