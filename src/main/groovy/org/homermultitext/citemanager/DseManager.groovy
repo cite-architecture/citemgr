@@ -175,15 +175,26 @@ class DseManager {
       if (debug > 0) {
 	System.err.println "DseMgr:imageMapsByText: got map " + singleMap
       }
+      //nodeMap += singleMap
+      singleMap.keySet().each { k ->
+	if (nodeMap[k]) {
+	  nodeMap[k] = nodeMap[k] +  singleMap[k]
+	} else {
+	  nodeMap[k] = singleMap[k]
+	}
+      }
+      
 
-      nodeMap << singleMap
       if (debug > 0) {
-	println "file ${f}: map:"
-	println singleMap
-	println "node map now : " 
-	println "${nodeMap}\n\n"
+	System.err.println "file ${f}: map:"
+	System.err.println singleMap
+	System.err.println "node map now has : " 
+	System.err.println "${nodeMap.keySet().size()} keys\n\n"
+	System.err.println nodeMap
       }
     }
+
+    
     return nodeMap
   }
 
@@ -345,23 +356,29 @@ class DseManager {
     // should be set-identical
     def surfSet = txtNodesForSurface as Set
     def   imgSet  = txtNodesForImage as Set
-    if (debug > 0) {
-      System.err.println "\n\n-->Num. texts mapped to surface: " + txtNodesForSurface.size()
-      System.err.println "-->Num. texts mapped to image: " + txtNodesForImage.size() + "\n\n"
-    }
     if ( surfSet == imgSet) {
      validMapping = true
 
-     
-     
-
      cf = "For image ${img}, ${txtNodesForImage.size()} text units match ${txtNodesForSurface.size()} text units for surface ${urn}."
+     if (debug > 0) {
+       System.err.println "\n\n-->Num. texts mapped to surface: " + txtNodesForSurface.size()
+       System.err.println "-->Num. texts mapped to image: " + txtNodesForImage.size() + "\n\n"
+       System.err.println "report: " + cf
+    }
+
+     
     } else {
 
       def disjunctSet = (surfSet + imgSet) - surfSet.intersect(imgSet)
       cf = "Found the following discrepancies between ${imgSet.size()} entries for image ${img} and ${surfSet.size()} entries for surface ${urn}:  ${disjunctSet}"
       System.err.println "DseManager:DseRept: mismatch between mappings"
       System.err.println cf
+
+      if (debug > 0) {
+	System.err.println "\n\n-->Num. texts mapped to surface: " + txtNodesForSurface.size()
+	System.err.println "-->Num. texts mapped to image: " + txtNodesForImage.size() + "\n\n"
+	System.err.println "report: " + cf
+      }
     }
 
     def mappingReport = [validMapping, cf]
