@@ -24,5 +24,22 @@ public class TextAnalyzerTest extends ConcordionTestCase {
     public String setHref(String path) {
 	return (path);
     }
+
+
+    
+    public boolean exemplify(String tsvFile, String citeUrnProp, String ctsUrnProp, String textChunk)
+    throws Exception {
+	String buildPath = new java.io.File( "." ).getCanonicalPath() + docPath;
+
+	try {
+	    File inv = new File(buildPath + tsvFile);
+	    return false;
+	    
+	} catch (Exception e) {
+	    System.err.println ("TextAnalyzer: exception " + e.toString());
+	    throw e;
+	}
+
+    }
     
 }
