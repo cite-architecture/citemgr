@@ -12,8 +12,8 @@ class TestDseRept extends GroovyTestCase {
 
 
   File dataDir = new File("testdata/dse/venA")
-  def txtImgFiles = ["venA-captions-img.csv", "venA-extraIliadic-img.csv"]
-  def txtTbsFiles = ["venA-captions-tbs.csv", "venA-extraIliadic-tbs.csv"]
+  def txtImgFiles = ["venA-captions-img.csv", "venA-extraIliadic-img.csv", "venA-Iliad-4-img.csv", "scholiaToImage.csv"]
+  def txtTbsFiles = ["venA-captions-tbs.csv", "venA-extraIliadic-tbs.csv", "venA-Iliad-surf.csv", "scholiaToTbs.csv" ]
 
   String testPage = "urn:cite:hmt:msA.1r"
   
@@ -42,7 +42,7 @@ class TestDseRept extends GroovyTestCase {
     def rept =  dsemgr.dseReport(new CiteUrn(testPage))
     def imgRept = rept[0]
 
-    System.err.println "Image report: " + imgRept[1]
+    System.err.println "Imgage report: " + imgRept[1]
     System.err.println "Image report: " + imgRept[0]
     assert imgRept[0] == true
 
@@ -50,6 +50,13 @@ class TestDseRept extends GroovyTestCase {
     System.err.println "Mappings: " + mapRept[0]
     System.err.println "Mappings: " + mapRept[1]
     assert mapRept[0] == false
+
+
+
+    dsemgr.debug = 1
+    String il4pg = "urn:cite:hmt:msA.51v"
+    def rept4 =  dsemgr.dseReport(new CiteUrn(il4pg))
+    
     
   }
 

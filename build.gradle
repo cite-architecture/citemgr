@@ -13,6 +13,8 @@ buildscript {
       classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.3'
       classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: '0.2.4'
       classpath group: 'edu.holycross.shot', name : 'nysi' , version: '0.2.2'
+
+      classpath group:       'org.homermultitext', name : 'hmt-utils', version: '0.2.8'
     }
 }
 
@@ -20,7 +22,8 @@ import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.prestochango.CollectionArchive
 import edu.holycross.shot.abracadabra.CiteIndex
 import edu.holycross.shot.nysi.ImgTurtleizer
-
+import org.homermultitext.utils.HmtTokenizer
+      
 import org.apache.tools.ant.filters.*
 
 apply plugin: "base"
@@ -115,6 +118,7 @@ dependencies {
   compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
 
 
+  compile group:       'org.homermultitext', name : 'hmt-utils', version: '0.2.8'
   // needed for hocuspocus:
   compile group: 'com.thaiopensource', name:'jing', version: jingVersion
   compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
@@ -240,6 +244,7 @@ task filterImgs(type: Copy) {
 filterImgs.doFirst {
   println "Filter copy images in " + imgcolldir
 }
+
 
 task imgttl(dependsOn: [filterImgs]) {
   description = "Generates RDF for configured NYSI"
@@ -529,4 +534,14 @@ test.dependsOn setUpResources
 test {
     systemProperties 'concordion.output.dir': file("${buildDir}/concordion-results")
 
+}
+
+
+
+
+
+task conc(type: Copy, dependsOn: test) {
+  from "${buildDir}/concordion-results"
+  into "${buildDir}/concordion-formatted"
+  filter(ReplaceTokens, tokens: tokenMap)
 }
