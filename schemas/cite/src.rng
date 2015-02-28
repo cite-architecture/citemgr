@@ -11,6 +11,7 @@
                 name="type">
                 <choice>
                     <value>file</value>
+                    <value>fusiontable</value>
                 </choice>
             </attribute>
             <attribute

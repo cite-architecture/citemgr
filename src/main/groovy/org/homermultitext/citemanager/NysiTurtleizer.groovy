@@ -11,7 +11,7 @@ class NysiTurtleizer {
 
     File collectionDirectory 
 
-    File imageDirectory 
+//    File imageDirectory 
 
 
     /** Writable file for resulting turtle-formatted triplets. */
@@ -19,25 +19,25 @@ class NysiTurtleizer {
 
     boolean includePrefix
 
-    NysiTurtleizer(File collDir, File imgDir, File outFile) {
+    NysiTurtleizer(File collDir, File outFile) {
         this.collectionDirectory =  collDir
-        this.imageDirectory = imgDir
+        //this.imageDirectory = imgDir
         this.turtleOutput = outFile
         this.includePrefix = false
     }
 
-    NysiTurtleizer(File collDir, File imgDir, File outFile, boolean prefix) {
+    NysiTurtleizer(File collDir, File outFile, boolean prefix) {
         this.collectionDirectory =  collDir
-        this.imageDirectory = imgDir
+        //this.imageDirectory = imgDir
         this.turtleOutput = outFile
         this.includePrefix = prefix
     }
 
 
     /** 
-    * main() method expects three arguments: a writable output file name,
-    * a directory where the defined index files are to be found, and a
-    * with one or more files of sequence data.
+    * main() method expects four arguments: a directory where
+    * image-collection inventories may be found; a writeable output file.
+    * A
     */
     public static void main(String[] args) 
     throws Exception {
@@ -48,17 +48,17 @@ class NysiTurtleizer {
             System.exit(-1)
             break
 
-            case 5:
+            case 4:
                 try {
                 File collDir = new File(args[0])
-                File imgDir = new File(args[1])
-                File outDir = new File(args[2])
+                //File imgDir = new File(args[1])
+                File outDir = new File(args[1])
                 if (! outDir.exists()) {
                     outDir.mkdir()
                 }
-                File  outFile = new File(outDir, args[3])
+                File  outFile = new File(outDir, args[2])
                 boolean prefix
-                switch (args[4]) {
+                switch (args[3]) {
                     case "t":
                         case "T":
                         case "true":
@@ -74,7 +74,7 @@ class NysiTurtleizer {
                         prefix = false
                     break
                 }
-                NysiTurtleizer ttl = new NysiTurtleizer(collDir, imgDir, outFile, prefix)
+                NysiTurtleizer ttl = new NysiTurtleizer(collDir, outFile, prefix)
                 ttl.generateTurtle()
 
             } catch (Exception e) {
@@ -90,9 +90,10 @@ class NysiTurtleizer {
 
 
     void generateTurtle() {
-        ImgTurtleizer ittl  = new ImgTurtleizer(this.collectionDirectory.toString(), this.imageDirectory.toString())
+        System.err.println "Starting..."
+        ImgTurtleizer ittl  = new ImgTurtleizer(this.collectionDirectory.toString() )
 
-        System.err.println "Generating img TTL from collections in " + this.collectionDirectory + " and data in " + this.imageDirectory
+        System.err.println "Generating img TTL from collections in " + this.collectionDirectory + "."
         ittl.ttl(turtleOutput, includePrefix) 
     }
 
