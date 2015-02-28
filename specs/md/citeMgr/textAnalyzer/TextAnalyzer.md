@@ -9,6 +9,7 @@ For this situation, `citemgr` can express the organization of the analysis as an
 
 ### Example ###
 
-Given [this `.tsv` data]() from a CITE Collection, if we specify that the property named <strong>Analysis</strong> is the canical identifier for the analysis, the property named <strong>SourceText</strong> is a CTS URN identifying the text analyzed, and the property named <strong>TextToken</strong> has the "lemma" or tokenization that the analysis comments on, then we can represent this as RDF as follows.
+Given 
+<a href="../../../resources/test/data/tokens.tsv" concordion:set="#ti = setHref(#HREF)">this `.tsv` data</a> from a CITE Collection, if we specify that the property named <strong>Analysis</strong> is the canical identifier for the analysis, the property named <strong>SourceText</strong> is a CTS URN identifying the text analyzed, and the property named <strong>TextToken</strong> has the "lemma" or tokenization that the analysis comments on, then we can represent this as RDF as follows.
 
 @closeex@
