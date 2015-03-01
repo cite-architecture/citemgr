@@ -3,15 +3,9 @@ title: citemgr
 layout: page
 ---
 
-Some links
-        <ul>
-          <li><a href="https://github.com/neelsmith/citemgr/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/neelsmith/citemgr/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/neelsmith/citemgr">View On <strong>GitHub</strong></a></li>
-        </ul>
-      
-      
-  
+## About ##
+
+`citemgr` helps you manage a suite of CITE repositories.
 
 Its main function is to generate RDF representations of CITE repositories.
 
@@ -32,3 +26,18 @@ all services configured in a given configuration file, you can use
 Output in <code>build/ttl</code> will include individual TTL files for each service, and a composite
 file <code>all.ttl</code> with appropriate <code>@prefix</code> statements so it can be directly loaded into
 an RDF triple store.
+
+
+## Links ##
+
+
+
+- [github source](https://github.com/neelsmith/citemgr)
+- [live specifications](specs/citeMgr/CiteMgr.html)
+- [API docs](api)
+  
+Download:
+     
+- a [ZIP File](https://github.com/neelsmith/citemgr/zipball/master)
+- a [`tar` ball](https://github.com/neelsmith/citemgr/tarball/master)
+
