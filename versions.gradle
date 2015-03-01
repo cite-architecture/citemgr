@@ -8,19 +8,24 @@
 project.ext {
     groovyVersion = "2.0.6"
 
-    greekutilsVersion = "0.8.5"
 
-    citeVersion = "0.90.0"
+
+
 
     jingVersion = "20091111"
     saxonVersion = "8.7"
 
-    nysiVersion = "0.2.2"
-    abracadabraVersion = "0.2.4"
-    prestochangoVersion = "0.3.3"
-    hocuspocusVersion = "0.11.5"
 
     junitVersion = "4.8.2"
     xmlunitVersion = "1.3"
+
+
+    // report these dependencies in formal spec:
+    citeVersion = "0.90.0"	 
+    nysiVersion = "0.2.2"
+    abracadabraVersion = "0.2.4"
+    prestochangoVersion = "0.3.3"
+    hocuspocusVersion = "0.12.2"
+    greekutilsVersion = "0.8.5"
 
 }
