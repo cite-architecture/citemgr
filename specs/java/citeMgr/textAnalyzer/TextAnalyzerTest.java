@@ -25,7 +25,7 @@ public class TextAnalyzerTest extends ConcordionTestCase {
 	return (path);
     }
 
-
+    
     
     public String exemplify(String tsvFileName, String citeUrnProp, String ctsUrnProp, String textChunk, String exemplarId)
     throws Exception {
@@ -36,7 +36,7 @@ public class TextAnalyzerTest extends ConcordionTestCase {
 	    
 	    AnalyticalExemplarBuilder aeb = new AnalyticalExemplarBuilder();
 	    //aeb.debug = 5;
-	    String rdf = aeb.rdfFromTsv(tsvFile, citeUrnProp, ctsUrnProp, textChunk, exemplarId);
+	    String rdf = aeb.rdfFromTsv(tsvFile, citeUrnProp, ctsUrnProp, textChunk, exemplarId, true);
 	    return rdf;
 	    
 	} catch (Exception e) {
