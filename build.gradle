@@ -9,11 +9,12 @@ buildscript {
     }
     dependencies {
       classpath group: 'com.github.rjeschke', name: 'txtmark', version: '0.11'
-      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.11.5'
+
+      // VERIFY THESE AGAINST versions.gradle!
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.12.2'
       classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.3'
       classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: '0.2.4'
       classpath group: 'edu.holycross.shot', name : 'nysi' , version: '0.2.2'
-
       classpath group:       'org.homermultitext', name : 'hmt-utils', version: '0.2.8'
     }
 }
@@ -538,9 +539,20 @@ test {
 
 
 
+task addVersion () {
+}
+addVersion.doLast {
+  tokenMap["version"] = version
+  tokenMap["deps"] = """
+    <tr><td>cite</td><td>${citeVersion}</td></tr>
+    <tr><td>nysi</td><td>${nysiVersion}</td></tr>
+    <tr><td>abracadabra</td><td>${abracadabraVersion}</td></tr>
+    <tr><td>prestochango</td><td>${prestochangoVersion}</td></tr>
+    <tr><td>hocuspocus</td><td>${hocuspocusVersion}</td></tr>
+    <tr><td>greekutils</td><td>${greekutilsVersion}</td></tr>""".toString() 
+}
 
-
-task conc(type: Copy, dependsOn: test) {
+task conc(type: Copy, dependsOn: [test, addVersion]) {
   from "${buildDir}/concordion-results"
   into "${buildDir}/concordion-formatted"
   filter(ReplaceTokens, tokens: tokenMap)

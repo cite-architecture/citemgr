@@ -27,13 +27,17 @@ public class TextAnalyzerTest extends ConcordionTestCase {
 
 
     
-    public boolean exemplify(String tsvFile, String citeUrnProp, String ctsUrnProp, String textChunk)
+    public String exemplify(String tsvFileName, String citeUrnProp, String ctsUrnProp, String textChunk, String exemplarId)
     throws Exception {
 	String buildPath = new java.io.File( "." ).getCanonicalPath() + docPath;
 
 	try {
-	    File inv = new File(buildPath + tsvFile);
-	    return false;
+	    File tsvFile = new File(buildPath + tsvFileName);
+	    
+	    AnalyticalExemplarBuilder aeb = new AnalyticalExemplarBuilder();
+	    //aeb.debug = 5;
+	    String rdf = aeb.rdfFromTsv(tsvFile, citeUrnProp, ctsUrnProp, textChunk, exemplarId);
+	    return rdf;
 	    
 	} catch (Exception e) {
 	    System.err.println ("TextAnalyzer: exception " + e.toString());
