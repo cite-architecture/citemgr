@@ -35,10 +35,17 @@ class AnalyticalExemplarBuilder {
    */
   String tripletToRdf(String exemplarId, String cite, String cts, String chunk, Integer seq) {
     StringBuilder rdf = new StringBuilder()
-    CtsUrn exemplarUrn
+    CtsUrn srcUrn = new CtsUrn(cts)
+    CtsUrn exemplarUrn =   composeAnalyticalUrn(srcUrn, exemplarId, seq)
     
     // test if this is at version level!
-    CtsUrn srcUrn = new CtsUrn(cts)
+    CtsUrn versionUrn = new CtsUrn(exemplarUrn.reduceToVersion())
+    rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> rdf:label " + '"Exemplar analyzing text ' + "'" + versionUrn.getUrnWithoutPassage() + "' for analytical collection " +"'" +   exemplarId + "'" + '" . \n')
+    rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> cts:belongsTo <${versionUrn.getUrnWithoutPassage()}> .\n")
+    rdf.append("<${srcUrn.getUrnWithoutPassage()}> cts:possesses <${versionUrn.getUrnWithoutPassage()}> .\n")
+    rdf.append("\n\n")
+
+    
     if ((srcUrn.levelForLabel() != "edition") && (srcUrn.levelForLabel() != "edition")) {
       //System.err.println "${cts} WON'T WORK: " + srcUrn.levelForLabel()
     } else {

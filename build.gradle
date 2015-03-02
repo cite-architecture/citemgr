@@ -87,7 +87,7 @@ if (hasProperty('conf')) {
 
 group = "org.homermultitext"
 
-version = '0.5.12'
+version = '0.5.14'
 
 repositories {
     mavenCentral()
