@@ -8,13 +8,8 @@
 project.ext {
     groovyVersion = "2.0.6"
 
-
-
-
-
     jingVersion = "20091111"
     saxonVersion = "8.7"
-
 
     junitVersion = "4.8.2"
     xmlunitVersion = "1.3"

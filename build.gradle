@@ -538,7 +538,6 @@ test {
 }
 
 
-
 task addVersion () {
 }
 addVersion.doLast {
@@ -553,7 +552,3 @@ addVersion.doLast {
 }
 
 task conc(type: Copy, dependsOn: [test, addVersion]) {
-  from "${buildDir}/concordion-results"
-  into "${buildDir}/concordion-formatted"
-  filter(ReplaceTokens, tokens: tokenMap)
-}
