@@ -48,43 +48,58 @@ class AnalyticalExemplarBuilder {
 
     if (srcUrn.isRange()) {
       // it's more complicated
+
+
+
+      
     } else {
       if (debug > 1) {
 	System.err.println "In new triple for ${exemplarId}, CITE: ${cite} for CTS ${cts}, chunk ${chunk}"
-	    
 	System.err.println "NEW URN ${srcUrn.getUrnWithoutPassage()}.${exemplarId}:${srcUrn.getPassageNode()}.${seq}"
       }
     }
+
+
+    CtsUrn bareSrc = new CtsUrn(srcUrn.getUrnWithoutPassage())
+    rdf.append("<${srcUrn}> cts:isSubstringOf  <${bareSrc}${srcUrn.getPassageNode()}> .\n")
+    rdf.append("<${bareSrc}${srcUrn.getPassageNode()}> cts:hasSubstring  <${srcUrn}> .\n")
+
+
+
+
+
+    
     exemplarUrn = composeAnalyticalUrn(srcUrn, exemplarId, seq)
     String quoted = chunk.replaceAll(/"/, "\\\\\"")
     //String quoted = chunk
 	  
     // Standard RDF expression of a CTS text node:
-    rdf.append("${exemplarUrn} rdf:label " + '"Analysis for ' + "'" +  exemplarId +   "' collection of text passage ${srcUrn}" + '"  .\n')
+    rdf.append("<${exemplarUrn}> rdf:label " + '"Analysis for ' + "'" +  exemplarId +   "' collection of text passage ${srcUrn}" + '"  .\n')
 	  
-    rdf.append("${exemplarUrn} rdf:type CtsExemplar . \n")
-    rdf.append("${exemplarUrn} cts:belongsTo ${exemplarUrn.getUrnWithoutPassage()} . \n")
-    rdf.append("${exemplarUrn.getUrnWithoutPassage()} cts:possesses ${exemplarUrn} . \n")
+    rdf.append("<${exemplarUrn}> rdf:type cts:Exemplar . \n")
+    rdf.append("<${exemplarUrn}> cts:belongsTo <${exemplarUrn.getUrnWithoutPassage()}> . \n")
+    rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> cts:possesses <${exemplarUrn}> . \n")
 
-    rdf.append("${exemplarUrn} cts:hasSequence ${seq} . \n")
-    rdf.append("${exemplarUrn} cts:hasTextContent " + '"' + quoted + '" . \n')
-    rdf.append("${exemplarUrn} cts:citationDepth ${exemplarUrn.getCitationDepth()} . \n")
+    rdf.append("<${exemplarUrn}> cts:hasSequence ${seq} . \n")
+    rdf.append("<${exemplarUrn}> cts:hasTextContent " + '"' + quoted + '" . \n')
+    rdf.append("<${exemplarUrn}> cts:citationDepth ${exemplarUrn.getCitationDepth()} . \n")
+
 
 
     String baseUrn = exemplarUrn.getUrnWithoutPassage()
     Integer levels = exemplarUrn.getCitationDepth()
     while (levels > 1) {
-      rdf.append("${baseUrn}${exemplarUrn.getPassage(levels)} cts:containedBy  ${baseUrn}${exemplarUrn.getPassage(levels -1)} .\n")
-      rdf.append("${baseUrn}${exemplarUrn.getPassage(levels -1)} cts:contains ${baseUrn}${exemplarUrn.getPassage(levels)}   .\n")
+      rdf.append("<${baseUrn}${exemplarUrn.getPassage(levels)}> cts:containedBy  <${baseUrn}${exemplarUrn.getPassage(levels -1)}> .\n")
+      rdf.append("<${baseUrn}${exemplarUrn.getPassage(levels -1)}> cts:contains <${baseUrn}${exemplarUrn.getPassage(levels)}>   .\n")
 
       levels--;
-      rdf.append("${baseUrn}${exemplarUrn.getPassage(levels)} cts:citationDepth ${levels}   .\n")
+      rdf.append("<${baseUrn}${exemplarUrn.getPassage(levels)}> cts:citationDepth ${levels}   .\n")
     }
     // ORCA relations:
-    rdf.append("${cite} orca:analyzes ${exemplarUrn} .\n")
-    rdf.append("${exemplarUrn} orca:analyzedBy ${cite}  .\n")
-    rdf.append("${exemplarUrn} orca:exemplifies ${srcUrn} .\n")
-    rdf.append("${srcUrn} orca:exemplifiedBy ${exemplarUrn} .\n")
+    rdf.append("<${cite}> orca:analyzes <${exemplarUrn}> .\n")
+    rdf.append("<${exemplarUrn}> orca:analyzedBy <${cite}>  .\n")
+    rdf.append("<${exemplarUrn}> orca:exemplifies <${srcUrn}> .\n")
+    rdf.append("<${srcUrn}> orca:exemplifiedBy <${exemplarUrn}> .\n")
     
     return rdf.toString()
   }
@@ -204,10 +219,10 @@ class AnalyticalExemplarBuilder {
 	  CtsUrn nextUrn = composeAnalyticalUrn(txtUrn, newCollection, lineNo + 1)
 	  CtsUrn prevUrn = composeAnalyticalUrn(txtUrn, newCollection, lineNo - 1)
 	  if (lineNo < tabLines.size()) {
-	    rdf.append("${currentUrn} cts:next ${nextUrn} .\n")
+	    rdf.append("<${currentUrn}> cts:next <${nextUrn}> .\n")
 	  }
 	  if (lineNo > 1) {
-	    rdf.append("${nextUrn} cts:prev ${currentUrn} .\n")
+	    rdf.append("<${nextUrn}> cts:prev <${currentUrn}> .\n")
 	  }
 	}
 
