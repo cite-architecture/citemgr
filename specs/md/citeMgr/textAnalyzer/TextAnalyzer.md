@@ -14,8 +14,19 @@ A system analysis
 @openex@
 
 ### Example ###
+<a href="../../../resources/test/data/personalNamesCE.tsv" concordion:set="#tsv = setHref(#HREF)">this `.tsv` data</a> from a CITE Collection, i
+
+
 
 Given 
-<a href="../../../resources/test/data/tokens.tsv" concordion:set="#tsv = setHref(#HREF)">this `.tsv` data</a> from a CITE Collection, if we specify that the property named <strong concordion:set="#canon">Analysis</strong> is the canical identifier for the analysis, the property named <strong concordion:set="#txt">SourceText</strong> is a CTS URN identifying the text analyzed, and the property named <strong concordion:set="#lemma">TextToken</strong> has the "lemma" or tokenization that the analysis comments on, if we define a new exemplar named <strong concordion:set="#exid">lex</strong>, then we will get  <strong concordion:assertEquals="exemplify(#tsv,#canon,#txt,#lemma,#exid)">thisRDF</strong>.
+<a href="../../../resources/test/data/tokens.tsv" concordion:set="#tsvother = setHref(#HREF)">this `.tsv` data</a> from a CITE Collection, if we specify these properties:
+
+- the record of the entire analysis named <strong concordion:set="#analyzer">citeUrn</strong>
+- the results of the analysis is named <strong concordion:set="#canon">analysis</strong>:  
+- the text passage under analysis  is named <strong concordion:set="#txt">ctsUrn</strong>
+- the text content of the new exemplar is named <strong concordion:set="#lemma">surfaceForm</strong>
+
+
+and we  define a new exemplar named <strong concordion:set="#exid">pers</strong>, then can  <strong concordion:assertEquals="exemplify(#tsv,#analyzer,#canon,#txt,#lemma,#exid)">generate an expression of the exemplar text as RDF</strong>.
 
 @closeex@

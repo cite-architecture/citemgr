@@ -1,6 +1,7 @@
 import com.github.rjeschke.txtmark.*
 
 buildscript {
+  apply from: "versions.gradle"
     repositories {
         mavenCentral()
 	maven {
@@ -10,12 +11,12 @@ buildscript {
     dependencies {
       classpath group: 'com.github.rjeschke', name: 'txtmark', version: '0.11'
 
-      // VERIFY THESE AGAINST versions.gradle!
-      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: '0.12.2'
-      classpath group: 'edu.holycross.shot', name : 'prestochango' , version: '0.3.3'
-      classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: '0.2.4'
-      classpath group: 'edu.holycross.shot', name : 'nysi' , version: '0.2.2'
-      classpath group:       'org.homermultitext', name : 'hmt-utils', version: '0.2.8'
+
+      classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion
+      classpath group: 'edu.holycross.shot', name : 'prestochango' , version: prestochangoVersion
+      classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: abracadabraVersion
+      classpath group: 'edu.holycross.shot', name : 'nysi' , version: nysiVersion
+      classpath group:       'org.homermultitext', name : 'hmt-utils', version: hmtutilsVersion
     }
 }
 
@@ -87,7 +88,7 @@ if (hasProperty('conf')) {
 
 group = "org.homermultitext"
 
-version = '0.5.14'
+version = '0.5.15'
 
 repositories {
     mavenCentral()
@@ -548,6 +549,7 @@ addVersion.doLast {
     <tr><td>abracadabra</td><td>${abracadabraVersion}</td></tr>
     <tr><td>prestochango</td><td>${prestochangoVersion}</td></tr>
     <tr><td>hocuspocus</td><td>${hocuspocusVersion}</td></tr>
+    <tr><td>hmt-utils</td><td>${hmtutilsVersion}</td></tr>
     <tr><td>greekutils</td><td>${greekutilsVersion}</td></tr>""".toString() 
 }
 

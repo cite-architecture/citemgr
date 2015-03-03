@@ -27,7 +27,7 @@ public class TextAnalyzerTest extends ConcordionTestCase {
 
     
     
-    public String exemplify(String tsvFileName, String citeUrnProp, String ctsUrnProp, String textChunk, String exemplarId)
+    public String exemplify(String tsvFileName, String analysisRecordProp, String citeUrnProp, String ctsUrnProp, String textChunk, String exemplarId)
     throws Exception {
 	String buildPath = new java.io.File( "." ).getCanonicalPath() + docPath;
 
@@ -35,8 +35,7 @@ public class TextAnalyzerTest extends ConcordionTestCase {
 	    File tsvFile = new File(buildPath + tsvFileName);
 	    
 	    AnalyticalExemplarBuilder aeb = new AnalyticalExemplarBuilder();
-	    //aeb.debug = 5;
-	    String rdf = aeb.rdfFromTsv(tsvFile, citeUrnProp, ctsUrnProp, textChunk, exemplarId, true);
+	    String rdf = aeb.rdfFromTsv(tsvFile, analysisRecordProp, citeUrnProp, ctsUrnProp, textChunk, exemplarId, true);
 	    return rdf;
 	    
 	} catch (Exception e) {

@@ -32,8 +32,14 @@ class AnalyticalExemplarBuilder {
 
   
   /** Composes RDF for a single triple of CTS URN, CITE URN and text content.
+   * @param exemplarId String to use as exemplar identifier in new exemplar-level CTS URNs.
+   * @param analyzer CITE URN representing a whole analysis in an ordered collection.
+   * @param cite CITE URN expressing how passage is analyzed.
+   * @param cts CTS URN identifying passage analyzed.
+   * @param chunk Text content of new citable exemplar node.
+   * @param seq Sequence number.
    */
-  String tripletToRdf(String exemplarId, String cite, String cts, String chunk, Integer seq) {
+  String tripletToRdf(String exemplarId, String analyzer, String cite, String cts, String chunk, Integer seq) {
     StringBuilder rdf = new StringBuilder()
     CtsUrn srcUrn = new CtsUrn(cts)
     CtsUrn exemplarUrn =   composeAnalyticalUrn(srcUrn, exemplarId, seq)
@@ -41,8 +47,12 @@ class AnalyticalExemplarBuilder {
     // test if this is at version level!
     CtsUrn versionUrn = new CtsUrn(exemplarUrn.reduceToVersion())
     rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> rdf:label " + '"Exemplar analyzing text ' + "'" + versionUrn.getUrnWithoutPassage() + "' for analytical collection " +"'" +   exemplarId + "'" + '" . \n')
+    
     rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> cts:belongsTo <${versionUrn.getUrnWithoutPassage()}> .\n")
-    rdf.append("<${srcUrn.getUrnWithoutPassage()}> cts:possesses <${versionUrn.getUrnWithoutPassage()}> .\n")
+
+    rdf.append(" <${versionUrn.getUrnWithoutPassage()}> cts:possesses <${exemplarUrn.getUrnWithoutPassage()}> .\n")
+
+
     rdf.append("\n\n")
 
     
@@ -67,6 +77,7 @@ class AnalyticalExemplarBuilder {
     }
 
 
+    // NS? What's up with getUrnWithoutPassage?  Trailing colon or not?
     CtsUrn bareSrc = new CtsUrn(srcUrn.getUrnWithoutPassage())
     rdf.append("<${srcUrn}> cts:isSubstringOf  <${bareSrc}${srcUrn.getPassageNode()}> .\n")
     rdf.append("<${bareSrc}${srcUrn.getPassageNode()}> cts:hasSubstring  <${srcUrn}> .\n")
@@ -91,8 +102,6 @@ class AnalyticalExemplarBuilder {
     rdf.append("<${exemplarUrn}> cts:hasTextContent " + '"' + quoted + '" . \n')
     rdf.append("<${exemplarUrn}> cts:citationDepth ${exemplarUrn.getCitationDepth()} . \n")
 
-
-
     String baseUrn = exemplarUrn.getUrnWithoutPassage()
     Integer levels = exemplarUrn.getCitationDepth()
     while (levels > 1) {
@@ -103,8 +112,13 @@ class AnalyticalExemplarBuilder {
       rdf.append("<${baseUrn}${exemplarUrn.getPassage(levels)}> cts:citationDepth ${levels}   .\n")
     }
     // ORCA relations:
-    rdf.append("<${cite}> orca:analyzes <${exemplarUrn}> .\n")
-    rdf.append("<${exemplarUrn}> orca:analyzedBy <${cite}>  .\n")
+   rdf.append("<${exemplarUrn}> orca:analyzedBy <${analyzer}> .\n")
+   rdf.append("<${analyzer}> orca:analyzes <${exemplarUrn}>  .\n")
+
+   rdf.append("<${exemplarUrn}> orca:analyzedAs <${cite}>  .\n")
+   rdf.append("<${cite}> orca:analysisOf <${exemplarUrn}>  .\n")
+
+
     rdf.append("<${exemplarUrn}> orca:exemplifies <${srcUrn}> .\n")
     rdf.append("<${srcUrn}> orca:exemplifiedBy <${exemplarUrn}> .\n")
     
@@ -126,9 +140,9 @@ class AnalyticalExemplarBuilder {
    * @returns A String of RDF.
    * @throws Exception for all kinds of catastrophic results.
    */
-  String rdfFromTsv(File srcCollection, String citeProp, String ctsProp, String chunkProp, String newCollection)
+  String rdfFromTsv(File srcCollection, String analyzer, String citeProp, String ctsProp, String chunkProp, String newCollection)
   throws Exception {
-    return rdfFromTsv(srcCollection, citeProp, ctsProp, chunkProp,newCollection,false)
+    return rdfFromTsv(srcCollection, analyzer, citeProp, ctsProp, chunkProp,newCollection,false)
   }
 
 
@@ -148,9 +162,8 @@ class AnalyticalExemplarBuilder {
    * @returns A String of RDF.
    * @throws Exception for all kinds of catastrophic results.
    */
-    String rdfFromTsv(File srcCollection, String citeProp, String ctsProp, String chunkProp, String newCollection, boolean prefix)
+    String rdfFromTsv(File srcCollection, String analyzer, String citeProp, String ctsProp, String chunkProp, String newCollection, boolean prefix)
   throws Exception {
-
     
     StringBuilder rdf = new StringBuilder()
     if (prefix) {
@@ -160,6 +173,8 @@ class AnalyticalExemplarBuilder {
     Integer citeCol = -1
     Integer ctsCol = -1
     Integer chunkCol = -1
+    Integer analysisCol = -1
+    
 
     def tabLines = srcCollection.readLines()
     
@@ -170,7 +185,7 @@ class AnalyticalExemplarBuilder {
 	// Identify columns for properties:
 	cols.eachWithIndex { txt, num ->
 	  if (debug > 1) {
-	    System.err.println "AEB: check column ${txt}, ${num + 1} out of ${cols.size()}"
+	    System.err.println "AEB: check column #${txt}#, ${num + 1} out of ${cols.size()}"
 	  }
 	  switch(txt) {
 	  case citeProp:
@@ -185,6 +200,10 @@ class AnalyticalExemplarBuilder {
 	  chunkCol = num
 	  break
 
+	  case analyzer:
+	  analysisCol = num
+	  break
+	  
 	  default:
 	  break
 	  }
@@ -197,13 +216,18 @@ class AnalyticalExemplarBuilder {
 	}
 
 	if (ctsCol < 0) {//  && (ctsCol >= 0) && (chunkCol >= 0)) {
-	  errMsg.append("No CTS column " + ctsProp + "\n")
+	  errMsg.append("No CTS column #" + ctsProp + "#\n")
 	  OK = false
 	}
 
 
 	if (chunkCol < 0) {
 	  errMsg.append("No chunk column " + chunkProp + "\n")
+	  OK = false
+	}
+
+	if (analysisCol < 0) {
+	  errMsg.append("No analysis column #" + analyzer + "#\n")
 	  OK = false
 	}
 
@@ -217,7 +241,8 @@ class AnalyticalExemplarBuilder {
 	String ctsUrn = cols[ctsCol]
 	String citeUrn = cols[citeCol]
 	String chunk = cols[chunkCol]
-	rdf.append(tripletToRdf(newCollection,citeUrn,ctsUrn,chunk,lineNo))
+	String analysis = cols[analysisCol]
+	rdf.append(tripletToRdf(newCollection,analysis, citeUrn,ctsUrn,chunk,lineNo))
 
 
 	if (tabLines.size() > 1) {
