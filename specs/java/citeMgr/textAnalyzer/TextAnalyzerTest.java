@@ -36,6 +36,7 @@ public class TextAnalyzerTest extends ConcordionTestCase {
 	    
 	    AnalyticalExemplarBuilder aeb = new AnalyticalExemplarBuilder();
 	    String rdf = aeb.rdfFromTsv(tsvFile, analysisRecordProp, citeUrnProp, ctsUrnProp, textChunk, exemplarId, true);
+	    System.err.println (rdf);
 	    return rdf;
 	    
 	} catch (Exception e) {
