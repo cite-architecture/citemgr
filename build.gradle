@@ -154,11 +154,11 @@ dependencies {
 task squawk {
 }
 squawk.doLast {
-  def ccSettings = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
-  println "Settings for CC TTL:"
-  ccSettings.each {
-    println "\t" + it
-  }
+  //  def ccSettings = ["${collinv}", "file://localhost${projectDir}/${collectionInvUrl}", "${collarchive}", "${buildDir}/ttl", "${prefix}"]
+  //  println "Settings for CC TTL:"
+  //  ccSettings.each {
+  //    println "\t" + it
+  //  }
 }
 
 
@@ -436,7 +436,7 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 
 
 task showProj() {
-  println "file://${projectDir}/${collectionInvUrl}"
+  //  println "file://${projectDir}/${collectionInvUrl}"
 }
 
 uploadArchives {
