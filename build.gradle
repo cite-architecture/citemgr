@@ -191,7 +191,7 @@ ctstab.doFirst() {
 ctstab.doLast() {
   println "build corpus from " + ctsinventory + " and " + ctsarchive
   println "Work in " + buildDir
-  Corpus c = new Corpus(new File("${ctsinventory}"), new File("${ctsarchive}"))
+  Corpus c = new Corpus(new File("${ctsinventory}"), new File("${ctsarchive}", new File("${textInvSchema}")))
   c.debug = 10
   c.tabulateRepository(new File(buildDir, "tabs"))
 }
@@ -222,7 +222,7 @@ ctsttl.doLast {
       System.err.println "ctsttl: unable to create inventory and archive!"
       throw e
     }
-    Corpus c = new Corpus(inv,archiveDir)
+    Corpus c = new Corpus(inv,archiveDir, new File(textInvSchema))
 
     File ttlDir = new File(buildDir, "ttl")
     if (! ttlDir.exists()) {
