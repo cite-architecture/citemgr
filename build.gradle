@@ -48,7 +48,7 @@ if (hasProperty('dse')) {
 
 
 if (hasProperty('schema')) {
-    System.err.print "Using publication configuration from ${schema}"
+    System.err.print "Using schemas defined in ${schema}"
     File confFile = new File(schema)
     if (! confFile.exists()) {
         throw new Exception("No configuration file ${schema} found.")
