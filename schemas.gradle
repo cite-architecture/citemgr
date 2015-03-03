@@ -1,4 +1,4 @@
 ext {
   //collectionInvUrl = "http://www.homermultitext.org/hmtschemas/collections/CiteCollectionService.rng"
-  collectionInvUrl = "schemas/cite/CiteCollectionInventory.rng"
+  collectionInvUrl = "specs/resources/schemas/CiteCollectionInventory.rng"
 }
