@@ -33,7 +33,7 @@ apply plugin:  "groovy"
 apply plugin:  "maven"
 
 apply from: "versions.gradle"
-apply from: "schemas.gradle"
+
 
 
 
@@ -45,6 +45,25 @@ if (! hasProperty('prefix')) {
 if (hasProperty('dse')) {
     apply from: dse
 }
+
+
+if (hasProperty('schema')) {
+    System.err.print "Using publication configuration from ${schema}"
+    File confFile = new File(schema)
+    if (! confFile.exists()) {
+        throw new Exception("No configuration file ${schema} found.")
+    }
+    apply from: schema
+
+} else {
+    File confFile = new File("schemas.gradle")
+    if (! confFile.exists()) {
+        throw new Exception("No configuration file 'schemas.gradle' found.")
+    }
+    println "Using default publication configuration in 'schemas.gradle'"
+    apply from: "schemas.gradle"
+}
+
 
 
 if (hasProperty('pub')) {
