@@ -262,7 +262,6 @@ class AnalyticalExemplarBuilder {
       rdf.append("\n\n\n\n")
       lineNo++;
     }
-    System.err.println rdf.toString()
     return rdf.toString()
   }
 }

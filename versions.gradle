@@ -16,12 +16,12 @@ project.ext {
 
 
     // report these dependencies in formal spec:
-    citeVersion = "0.92.2"
+    citeVersion = "0.93.0"
     
     nysiVersion = "0.2.2"
     abracadabraVersion = "0.2.4"
     prestochangoVersion = "0.3.3"
-    hocuspocusVersion = "0.12.2"
+    hocuspocusVersion = "0.12.3"
 
     hmtutilsVersion = "0.2.8"
     greekutilsVersion = "0.8.5"
