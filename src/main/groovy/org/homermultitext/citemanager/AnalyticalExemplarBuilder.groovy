@@ -44,16 +44,6 @@ class AnalyticalExemplarBuilder {
     CtsUrn srcUrn = new CtsUrn(cts)
     CtsUrn exemplarUrn =   composeAnalyticalUrn(srcUrn, exemplarId, seq)
     
-    // test if this is at version level!
-    CtsUrn versionUrn = new CtsUrn(exemplarUrn.reduceToVersion())
-    rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> rdf:label " + '"Exemplar analyzing text ' + "'" + versionUrn.getUrnWithoutPassage() + "' for analytical collection " +"'" +   exemplarId + "'" + '" . \n')
-    
-    rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> cts:belongsTo <${versionUrn.getUrnWithoutPassage()}> .\n")
-
-    rdf.append(" <${versionUrn.getUrnWithoutPassage()}> cts:possesses <${exemplarUrn.getUrnWithoutPassage()}> .\n")
-
-
-    rdf.append("\n\n")
 
     
     if ((srcUrn.levelForLabel() != "edition") && (srcUrn.levelForLabel() != "edition")) {
@@ -81,10 +71,6 @@ class AnalyticalExemplarBuilder {
     CtsUrn bareSrc = new CtsUrn(srcUrn.getUrnWithoutPassage())
     rdf.append("<${srcUrn}> cts:isSubstringOf  <${bareSrc}${srcUrn.getPassageNode()}> .\n")
     rdf.append("<${bareSrc}${srcUrn.getPassageNode()}> cts:hasSubstring  <${srcUrn}> .\n")
-
-
-
-
 
     
     exemplarUrn = composeAnalyticalUrn(srcUrn, exemplarId, seq)
@@ -242,9 +228,22 @@ class AnalyticalExemplarBuilder {
 	String citeUrn = cols[citeCol]
 	String chunk = cols[chunkCol]
 	String analysis = cols[analysisCol]
+
+	if (lineNo == 1) {
+	  CtsUrn txtUrn = new CtsUrn(ctsUrn)
+	  CtsUrn exemplarUrn = composeAnalyticalUrn(txtUrn, newCollection, lineNo)
+	  CtsUrn versionUrn = new CtsUrn(exemplarUrn.reduceToVersion())
+
+
+
+	  rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> rdf:label " + '"Exemplar analyzing text ' + "'" + versionUrn.getUrnWithoutPassage() + "' for analytical collection " +"'" +   newCollection + "'" + '" . \n')
+	  rdf.append("<${exemplarUrn.getUrnWithoutPassage()}> cts:belongsTo <${versionUrn.getUrnWithoutPassage()}> .\n")
+	  rdf.append(" <${versionUrn.getUrnWithoutPassage()}> cts:possesses <${exemplarUrn.getUrnWithoutPassage()}> .\n")
+	  rdf.append("\n\n")
+    	}
+
 	rdf.append(tripletToRdf(newCollection,analysis, citeUrn,ctsUrn,chunk,lineNo))
-
-
+	
 	if (tabLines.size() > 1) {
 	  CtsUrn txtUrn = new CtsUrn(ctsUrn)
 	  CtsUrn currentUrn = composeAnalyticalUrn(txtUrn, newCollection, lineNo)
