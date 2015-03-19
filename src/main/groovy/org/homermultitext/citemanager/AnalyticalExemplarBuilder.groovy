@@ -219,8 +219,13 @@ class AnalyticalExemplarBuilder {
 
 	if (!OK) {
 	  throw new Exception("AnalyticalExemplarBuilder: could not identify all columns.\n" + errMsg.toString())
+	} else {
+
+	  System.err.println ("Found all columns: ready to analyze");
 	}
 
+	System.err.println("End of line " + lineNo);
+	
 	
       } else {
 	if (debug > 1) {System.err.println "${lineNo}, get rdf for ${cols}"}

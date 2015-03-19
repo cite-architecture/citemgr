@@ -325,21 +325,23 @@ ccttl.doLast {
 
   File schemaFile = new File("schemas/cite/CiteCollectionInventory.rng")
 
-  File invFile = new File(collinv)
-  File archiveDir = new File(collarchive)
-  CollectionArchive cc = new CollectionArchive(invFile, schemaFile, archiveDir)
-  //cc.debug = 5
-  println "\nFrom inventory in ${collinv} and data in ${collarchive}:"
-  println "\tCollection list:  " + cc.getCollectionList() + "\n"
-  if (! buildDir.exists()) {
-    buildDir.mkdir()
+  if ((collinv != "") && (collarchive != "")) {
+	File invFile = new File(collinv)
+	File archiveDir = new File(collarchive)
+	CollectionArchive cc = new CollectionArchive(invFile, schemaFile, archiveDir)
+	//cc.debug = 5
+	println "\nFrom inventory in ${collinv} and data in ${collarchive}:"
+	println "\tCollection list:  " + cc.getCollectionList() + "\n"
+	if (! buildDir.exists()) {
+	  buildDir.mkdir()
+	}
+	File ttlDir = new File(buildDir, "ttl")
+	if (! ttlDir.exists()) {
+	  ttlDir.mkdir()
+	}
+	File testOut = new File(ttlDir, "collections.ttl")
+	cc.ttl(testOut, prefix)
   }
-  File ttlDir = new File(buildDir, "ttl")
-  if (! ttlDir.exists()) {
-    ttlDir.mkdir()
-  }
-  File testOut = new File(ttlDir, "collections.ttl")
-  cc.ttl(testOut, prefix)
 }
 
 
