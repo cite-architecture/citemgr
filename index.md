@@ -5,39 +5,39 @@ layout: page
 
 ## About ##
 
-`citemgr` helps you manage a suite of CITE repositories.
+`citemgr` is an automated build system (using [gradle](http://www.gradle.org)) for managing CTS, CITE Collection and CITE Image repositories.    As of version 0.6.0, the project is organized into two subprojects:  
 
-Its main function is to generate RDF representations of CITE repositories.
+1. the `core` directory automatically assembles some infrastructure, and does not need to be directly used.  (If you want to find out more about the `core` subproject, see [these details](core).)
+2. the `projects` directory provides tasks for working with CITE repositories, verifiying the integrity of their citation, and uniting data from one or more repositories in an RDF graph. 
+
+
+
 
 ## Prerequisites ##
-
-
 
 - [gradle](http://www.gradle.org/)
 
 ## Configuration  and usage
 
-A configuration file configures one or more of a CTS, CITE Collection and CITE Image repository. The configuration is identified by the <code>conf</code> project property or by default uses <code>conf.gradle</code>.  To generate a TTL representation of
-all services configured in a given configuration file, you can use
+You can use a configuration file for each of your projects to configure one or more of a CTS, CITE Collection and CITE Image repository.   The `projects` build file checks for a property named `proj` where you can supply the name of a configuration file relative to the `citemgr` root directory.   (If it does not find a `proj` property, it defaults to taking the settings from `projects/projconf.gradle`.)
 
-    gradle -Pconf=FILENAME ttl
+Gradle allows setting a property on the command line with the `-P`flag.  To generate a TTL representation of
+all services configured in a given configuration file, you can run from the CITE manager root directory:
 
+    gradle -Pproj=FILENAME projects:ttl
 
-Output in <code>build/ttl</code> will include individual TTL files for each service, and a composite
-file <code>all.ttl</code> with appropriate <code>@prefix</code> statements so it can be directly loaded into
+(Note that if you run this from the `projects` directory, the syntax will be `gradle -Pproj=FILENAME ttl`, but `FILENAME` will still refer to a file relative to the CITE manager root directory!)
+
+In `projects/build/ttl`, output will include individual TTL files for each service, and a composite
+file  `all.ttl` with appropriate  `@prefix` statements so it can be directly loaded into
 an RDF triple store.
 
 
 ## Links ##
 
 
-
 - [github source](https://github.com/neelsmith/citemgr)
 - [live specifications](specs/citeMgr/CiteMgr.html)
 - [API docs](api)
   
-Download:
-     
-- a [ZIP File](https://github.com/neelsmith/citemgr/zipball/master)
-- a [`tar` ball](https://github.com/neelsmith/citemgr/tarball/master)
 
