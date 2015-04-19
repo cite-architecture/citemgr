@@ -6,10 +6,8 @@
 // version definitions for all dependencies
 apply from: "${project.rootDir}/confs/versions.gradle"
 
-
 // schemas for projects:
 apply from: "${project.rootDir}/confs/schemas.gradle"
-
 
 // settings for core subproject publication to nexus: allow dynamic override
 if (hasProperty('pub')) {
@@ -32,7 +30,7 @@ if (hasProperty('pub')) {
 
 // settings for :core build:  allow dynamic override
 if (hasProperty('conf')) {
-    System.err.print "Using configuration data from ${conf}"
+    System.err.print "Using core configuration data from ${conf}"
     File confFile = new File(conf)
     if (! confFile.exists()) {
         throw new Exception("No configuration file ${conf} found.")
@@ -44,7 +42,7 @@ if (hasProperty('conf')) {
     if (! confFile.exists()) {
         throw new Exception("No configuration file ${confFile} found.")
     }
-    println "Using default configuration in 'coreconf.gradle'"
+    println "Using default core configuration in 'coreconf.gradle'"
     apply from: "${project.rootDir}/confs/coreconf.gradle"
 }
 

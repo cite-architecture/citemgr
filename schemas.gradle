@@ -1,4 +1,0 @@
-ext {
-  collectionInvSchema = "specs/resources/schemas/cite/CiteCollectionInventory.rng"
-  textInvSchema = "specs/resources/schemas/cts/TextInventory.rng"
-}

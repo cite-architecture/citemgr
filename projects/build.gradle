@@ -1,4 +1,3 @@
-
 import com.github.rjeschke.txtmark.*
 
 buildscript {
@@ -22,7 +21,6 @@ import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.prestochango.CollectionArchive
 import edu.holycross.shot.abracadabra.CiteIndex
 import edu.holycross.shot.nysi.ImgTurtleizer
-import org.homermultitext.utils.HmtTokenizer
       
 import org.apache.tools.ant.filters.*
 
@@ -32,12 +30,12 @@ apply plugin: "base"
 
 // settings for core: build:  allow dynamic override
 if (hasProperty('proj')) {
-    System.err.print "Using configuration data from ${proj}"
-    File confFile = new File(proj)
+    System.err.println "Using project configuration data from ${proj}"
+    File confFile =  new File("${project.rootDir}/${proj}")
     if (! confFile.exists()) {
         throw new Exception("No configuration file ${confFile} found.")
     }
-    apply from: proj
+    apply from: "${project.rootDir}/${proj}"
 
 } else {
     File confFile = new File("${project.rootDir}/projects/projconf.gradle")
@@ -48,14 +46,6 @@ if (hasProperty('proj')) {
     apply from: "${project.rootDir}/projects/projconf.gradle"
 }
 
-
-
-/*
-
-if (! hasProperty('prefix')) {
-    apply from: "options.gradle"
-}
-*/
 
 /* Settings for Digital Scholarly Edition data */
 /*
