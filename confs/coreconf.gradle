@@ -1,0 +1,19 @@
+// Configuration for citemgr:core
+
+project.ext {
+  // Settings for concordion:
+  //
+  // Path for markdown specs, relative to project dir:
+  mdSrc = "specs/md"
+
+  // ant properties to substitute in generating concordion HMTL:
+  tokenMap = [    "openex": "<div class='example'>", "closeex" : "</div>"]
+
+  // opening and closeing wrappers for concordion HTML:
+  htmlEnd = "</body>\n</html>\n"
+  htmlPreface = """
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<body>
+  """
+
+}

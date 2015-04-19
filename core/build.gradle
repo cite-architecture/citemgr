@@ -1,0 +1,175 @@
+import com.github.rjeschke.txtmark.*
+import org.apache.tools.ant.filters.*
+
+apply plugin: "base"
+apply plugin:  "groovy"
+apply plugin:  "maven"
+
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath group: 'com.github.rjeschke', name: 'txtmark', version: '0.11'
+  }
+}
+
+repositories {
+    mavenCentral()
+    
+    maven {
+        url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
+    }
+    maven {
+      url "https://oss.sonatype.org"
+    }
+}
+
+configurations {
+  lib
+}
+
+dependencies {
+  compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
+
+  compile group: 'edu.holycross.shot', name: 'nysi', version: nysiVersion
+  compile group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion
+  compile group : 'edu.holycross.shot', name : 'prestochango', version : prestochangoVersion
+  compile group : 'edu.holycross.shot', name : 'abracadabra', version : abracadabraVersion
+  
+  compile group: 'edu.harvard.chs', name: 'cite', version: citeVersion
+  compile group: 'edu.harvard.chs', name : 'greekutils' , version: greekutilsVersion
+
+  compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
+
+
+  compile group:       'org.homermultitext', name : 'hmt-utils', version: '0.2.8'
+  // needed for hocuspocus:
+  compile group: 'com.thaiopensource', name:'jing', version: jingVersion
+  compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
+
+
+  testCompile 'junit:junit:4.11'
+  testCompile 'org.concordion:concordion:1.4.4'
+
+  testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: nexusRepo) {
+            authentication (userName: nexusUser, password: nexusPassword)
+        }
+    }
+}
+
+/*
+artifacts {
+  lib jar
+}
+
+uploadLib {
+  repositories.mavenDeployer {
+    repository(url: nexusRepo) {                   
+      authentication (userName: nexusUser, password: nexusPassword)
+    }
+  }
+  doLast {
+    System.err.println "Code library uploaded."
+  }
+}
+*/
+
+// ****************************************************************** //
+// for specs with concordion:
+sourceSets {
+    main {
+        java {
+            srcDir 'core/src'
+        }
+        resources {
+            srcDir 'core/src'
+        }
+    }
+    test {
+        java {
+	  srcDir "specs/java"
+        }
+        resources {
+	  srcDir "${buildDir}/specs"
+        }
+    }
+}
+
+task cpResources(type: Copy) {
+  from "specs/resources"
+  into "${buildDir}/specs"
+}
+
+task setUpResources(dependsOn: cpResources) {
+}
+setUpResources.doLast {
+  println "READING FILE TREE FROM " + mdSrc
+  FileTree tree = fileTree("${project.rootDir}/${mdSrc}") {
+    include "**/*.md"
+  }
+  tree.visit { f ->
+    if (f.relativePath.isFile()) {
+      File inFile = new File("${project.rootDir}/${mdSrc}/${f.relativePath}")
+      println "Need to work on " + inFile
+      def segs = f.relativePath.getSegments()
+      String treePath = "${buildDir}/specs"
+      Integer limit =  segs.size() - 1
+      segs.eachWithIndex { s, i ->
+	if (i < limit) {
+	  treePath = "${treePath}/${s}"
+	  File nxtDir = new File(treePath)
+	  if (! nxtDir.exists()) {
+	    nxtDir.mkdir()
+	  }
+	}
+      }
+      File outDir = new File(treePath)
+      String htmlFileName = f.relativePath.getLastName().replaceFirst(/.md$/,".html")
+      File htmlFile = new File(outDir, htmlFileName)
+      println "Created ${htmlFile}"
+      try {
+	String body = Processor.process(inFile.getText("UTF-8"),Configuration.DEFAULT)
+	htmlFile.setText("${htmlPreface}${body}${htmlEnd}", "UTF-8")
+      } catch (Exception e) {
+	println "Failed to proces ${inFile}: ${e}"
+      }
+    }
+  }
+}
+
+
+test.dependsOn setUpResources
+test {
+    systemProperties 'concordion.output.dir': file("${buildDir}/concordion-results")
+
+}
+
+task addVersion () {
+}
+addVersion.doLast {
+  tokenMap["version"] = version
+  tokenMap["deps"] = """
+    <tr><td>cite</td><td>${citeVersion}</td></tr>
+    <tr><td>nysi</td><td>${nysiVersion}</td></tr>
+    <tr><td>abracadabra</td><td>${abracadabraVersion}</td></tr>
+    <tr><td>prestochango</td><td>${prestochangoVersion}</td></tr>
+    <tr><td>hocuspocus</td><td>${hocuspocusVersion}</td></tr>
+    <tr><td>hmt-utils</td><td>${hmtutilsVersion}</td></tr>
+    <tr><td>greekutils</td><td>${greekutilsVersion}</td></tr>""".toString() 
+}
+
+task conc(type: Copy, dependsOn: [test, addVersion]) {
+  from "${buildDir}/concordion-results"
+  into "${buildDir}/concordion-formatted"
+  filter(ReplaceTokens, tokens: tokenMap)
+}
+
+// end tasks for concordion testing
+// ****************************************************************** //
