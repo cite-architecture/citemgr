@@ -4,7 +4,7 @@ project.ext {
   // Settings for concordion:
   //
   // Path for markdown specs, relative to project dir:
-  mdSrc = "specs/md"
+  mdSrc = "core/specs/md"
 
   // ant properties to substitute in generating concordion HMTL:
   tokenMap = [    "openex": "<div class='example'>", "closeex" : "</div>"]

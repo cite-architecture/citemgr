@@ -6,7 +6,12 @@
 // version definitions for all dependencies
 apply from: "${project.rootDir}/confs/versions.gradle"
 
-// settings for publication to nexus: allow dynamic override
+
+// schemas for projects:
+apply from: "${project.rootDir}/confs/schemas.gradle"
+
+
+// settings for core subproject publication to nexus: allow dynamic override
 if (hasProperty('pub')) {
     System.err.print "Using publication configuration from ${pub}"
     File confFile = new File(pub)
@@ -16,16 +21,16 @@ if (hasProperty('pub')) {
     apply from: pub
 
 } else {
-    File confFile = new File("pubconf.gradle")
+    File confFile = new File("${project.rootDir}/confs/pubconf.gradle")
     if (! confFile.exists()) {
         throw new Exception("No configuration file 'pubconf.gradle' found.")
     }
     println "Using default publication configuration in 'pubconf.gradle'"
-    apply from: "pubconf.gradle"
+    apply from: confFile
 }
 
 
-// settings for core: build:  allow dynamic override
+// settings for :core build:  allow dynamic override
 if (hasProperty('conf')) {
     System.err.print "Using configuration data from ${conf}"
     File confFile = new File(conf)
@@ -40,13 +45,15 @@ if (hasProperty('conf')) {
         throw new Exception("No configuration file ${confFile} found.")
     }
     println "Using default configuration in 'coreconf.gradle'"
-    apply from: "${project.rootDir}/coreconf.gradle"
+    apply from: "${project.rootDir}/confs/coreconf.gradle"
 }
+
+
 
 
 subprojects {
   group = "org.homermultitext"
-  version = '0.5.20'	
+  version = '0.6.0'	
   tasks.withType(Jar) {
     archivesBaseName = "citemgr"
   }
