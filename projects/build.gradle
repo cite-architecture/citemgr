@@ -9,11 +9,13 @@ buildscript {
   }
   dependencies {
     classpath group: 'com.github.rjeschke', name: 'txtmark', version: '0.11'
-    classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: hocuspocusVersion
-    classpath group: 'edu.holycross.shot', name : 'prestochango' , version: prestochangoVersion
-    classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: abracadabraVersion
-    classpath group: 'edu.holycross.shot', name : 'nysi' , version: nysiVersion
-    classpath group:       'org.homermultitext', name : 'hmt-utils', version: hmtutilsVersion
+
+    // dependencies from versionMap:
+    classpath group: 'edu.holycross.shot', name : 'hocuspocus' , version: versionMap['hocuspocus']
+    classpath group: 'edu.holycross.shot', name : 'prestochango' , version: versionMap['prestochango']
+    classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: versionMap['abracadabra']
+    classpath group: 'edu.holycross.shot', name : 'nysi' , version: versionMap['nysi']
+    classpath group:       'org.homermultitext', name : 'hmt-utils', version: versionMap['hmtutils']
   }
 }
 
