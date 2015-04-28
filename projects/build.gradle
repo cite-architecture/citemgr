@@ -126,12 +126,15 @@ ctstab.doFirst() {
 ctstab.doLast() {
   println "build corpus from " + ctsinventory + " and " + ctsarchive
   println "Work in " + buildDir
-  Corpus c = new Corpus(new File("${ctsinventory}"), new File("${ctsarchive}", new File("${project.rootDir}/${textInvSchema}")))
+  File inv = new File("${ctsinventory}")
+  File textArchive = new File("${ctsarchive}")
+  File schema =    new File("${project.rootDir}/${textInvSchema}")
+  Corpus c = new Corpus(inv, textArchive, schema)
   c.debug = 10
   c.tabulateRepository(new File(buildDir, "tabs"))
 }
 
-
+/*
 task ctsttl() {
   description = "Generates TTL statements about text contents"
 }
@@ -295,6 +298,8 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 	}
       } }
 
+*/
+
 // too slow to tolerate :-(
 /*
         System.err.println "Adding data from cts ttl ..."
@@ -324,14 +329,20 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 // Big project runs out of memory with this approach :-(
 //+ ctsttl.getText(charEnc) + collectionsttl.getText(charEnc) + idxttl.getText(charEnc) + citeimgttl.getText(charEnc), charEnc)
 
+
+/*
         System.out.println "\nCompleted generating all TTL in ${buildDir}/ttl.\n"
     }
 }
+*/
 
+
+
+/*
 task zipTtl(type: Zip, dependsOn: [ttl]) {
   description = "Builds a zip file of all TTL output"
   from(file("${buildDir}/ttl"))
-  include("**/*.ttl")
+  include("** / *.ttl")
 }
 
 artifacts {
@@ -339,3 +350,4 @@ artifacts {
 }
 
 
+*/
