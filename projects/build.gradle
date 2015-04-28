@@ -134,7 +134,7 @@ ctstab.doLast() {
   c.tabulateRepository(new File(buildDir, "tabs"))
 }
 
-/*
+
 task ctsttl() {
   description = "Generates TTL statements about text contents"
 }
@@ -298,8 +298,6 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 	}
       } }
 
-*/
-
 // too slow to tolerate :-(
 /*
         System.err.println "Adding data from cts ttl ..."
@@ -330,15 +328,14 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 //+ ctsttl.getText(charEnc) + collectionsttl.getText(charEnc) + idxttl.getText(charEnc) + citeimgttl.getText(charEnc), charEnc)
 
 
-/*
         System.out.println "\nCompleted generating all TTL in ${buildDir}/ttl.\n"
     }
 }
-*/
 
 
 
-/*
+
+
 task zipTtl(type: Zip, dependsOn: [ttl]) {
   description = "Builds a zip file of all TTL output"
   from(file("${buildDir}/ttl"))
@@ -350,4 +347,3 @@ artifacts {
 }
 
 
-*/
