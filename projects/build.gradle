@@ -15,7 +15,7 @@ buildscript {
     classpath group: 'edu.holycross.shot', name : 'prestochango' , version: versionMap['prestochango']
     classpath group: 'edu.holycross.shot', name : 'abracadabra' , version: versionMap['abracadabra']
     classpath group: 'edu.holycross.shot', name : 'nysi' , version: versionMap['nysi']
-    classpath group:       'org.homermultitext', name : 'hmt-utils', version: versionMap['hmtutils']
+    //classpath group:       'org.homermultitext', name : 'hmt-utils', version: versionMap['hmtutils']
   }
 }
 
