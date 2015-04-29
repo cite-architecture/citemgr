@@ -18,7 +18,7 @@ project.ext {
     // report these dependencies in formal spec:
     versionMap = [
       "abracadabra" : "0.3.0",
-      "cite" : "0.93.2",
+      "cite" : "0.94.1",
       "greekutils" :"0.8.5",
       "hmtutils" : "0.3.0",
       "hocuspocus" : "0.12.5",
