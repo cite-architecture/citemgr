@@ -19,7 +19,7 @@ project.ext {
     versionMap = [
       "abracadabra" : "0.3.0",
       "cite" : "0.94.1",
-      "hocuspocus" : "0.13.1",
+      "hocuspocus" : "0.13.5",
       "nysi" : "0.2.4",
       "prestochango" : "0.3.8"
     ]
