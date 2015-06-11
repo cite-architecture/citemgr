@@ -334,15 +334,18 @@ class DseManager {
   }
 
 
-  // report on a single page
-  def dseReport(CiteUrn urn) {
-    def tbsToImgReport = []
+  /** Analyzes a single text-bearing surface.
+   * @param urn URN for the text-bearing surface to analyze.
+   * @returns A list of DseReports.
+   */
+  ArrayList dseReport(CiteUrn urn) {
+    DseReport tbsToImgReport
     
     CiteUrn img = imageForTbs(urn)
     if (! img) {
-      tbsToImgReport = [false, null]
+      tbsToImgReport = new DseReport(success: false, summary: null)
     } else {
-      tbsToImgReport = [true, img.toString()]
+      tbsToImgReport = new DseReport(success: true, summary: img.toString())
     }
 
     def txtNodesForImage = this.textNodesForImage(img)
@@ -360,6 +363,7 @@ class DseManager {
      validMapping = true
 
      cf = "For image ${img}, ${txtNodesForImage.size()} text units match ${txtNodesForSurface.size()} text units for surface ${urn}."
+
      if (debug > 0) {
        System.err.println "\n\n-->Num. texts mapped to surface: " + txtNodesForSurface.size()
        System.err.println "-->Num. texts mapped to image: " + txtNodesForImage.size() + "\n\n"
@@ -380,13 +384,15 @@ class DseManager {
 	System.err.println "report: " + cf
       }
     }
-
-    def mappingReport = [validMapping, cf]
+    DseReport mappingReport = new DseReport(success: validMapping, summary: cf)
 
     def report = [tbsToImgReport, mappingReport]
     return report    
   }
 
+
+
+  
   //////////////// TRIO OF METHODS FOR TEXT -> SURFACE INDEX ////////////////
 
 

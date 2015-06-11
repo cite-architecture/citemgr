@@ -52,7 +52,7 @@ dependencies {
   testCompile group :'xmlunit', name: 'xmlunit', version: xmlunitVersion
 }
 
-/*
+
 uploadArchives {
     repositories.mavenDeployer {
         repository(url: nexusRepo) {
@@ -60,7 +60,7 @@ uploadArchives {
         }
     }
 }
-*/
+
 
 artifacts {
   lib jar
@@ -80,6 +80,9 @@ uploadLib {
 
 // ****************************************************************** //
 // for specs with concordion:
+
+
+
 sourceSets {
     main {
         java {
@@ -168,6 +171,8 @@ task conc(type: Copy, dependsOn: [test, addVersion]) {
   into "${buildDir}/concordion-formatted"
   filter(ReplaceTokens, tokens: tokenMap)
 }
+
+
 
 // end tasks for concordion testing
 // ****************************************************************** //
