@@ -6,7 +6,7 @@
 
  */
 project.ext {
-    groovyVersion = "2.0.6"
+    groovyVersion = "2.4.6"
 
     jingVersion = "20091111"
     saxonVersion = "8.7"
@@ -19,7 +19,7 @@ project.ext {
     versionMap = [
       "abracadabra" : "0.3.0",
       "cite" : "0.94.1",
-      "hocuspocus" : "0.13.5",
+      "hocuspocus" : "1.0.1",
       "nysi" : "0.2.4",
       "prestochango" : "0.3.8"
     ]

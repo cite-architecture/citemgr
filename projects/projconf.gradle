@@ -7,6 +7,9 @@ project.ext {
     // Path to text inventory file:
     ctsinventory = ""
 
+	// Path to citation-configuration file:
+    ctscitationconfig = ""	
+
     // Path to directory where XML editions are found:
     ctsarchive = ""
 
