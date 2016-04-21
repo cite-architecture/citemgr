@@ -23,7 +23,7 @@ import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.prestochango.CollectionArchive
 import edu.holycross.shot.abracadabra.CiteIndex
 import edu.holycross.shot.nysi.ImgTurtleizer
-      
+
 import org.apache.tools.ant.filters.*
 
 apply plugin: "base"
@@ -57,7 +57,7 @@ if (hasProperty('dse')) {
 */
 repositories {
     mavenCentral()
-    
+
     maven {
         url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
     }
@@ -79,7 +79,7 @@ dependencies {
 /*
 task checkti(type: JavaExec) {
     description = "Verifies contents of configured text inventory."
-    
+
     main = "org.homermultitext.citemanager.TIVerifier"
     args = ["${ctsinventory}"]
 
@@ -150,24 +150,35 @@ ctsttl.doLast {
   }
 
   File inv
+  File citeConf
   File archiveDir
 
   if ((ctsinventory != "") && (ctsarchive != "")) {
     try {
       inv = new File("${ctsinventory}")
+      citeConf = new File("${ctscitationconfig}")
       archiveDir = new File("${ctsarchive}")
     } catch (Exception e) {
       System.err.println "ctsttl: unable to create inventory and archive!"
       throw e
     }
-    Corpus c = new Corpus(inv,archiveDir, new File("${project.rootDir}/${textInvSchema}"))
+    //Corpus c = new Corpus(inv,archiveDir, new File("${project.rootDir}/${textInvSchema}"))
 
+    // invFile, configFile, basedir
+    Corpus c = new Corpus(inv,citeConf, archiveDir)
+
+
+    System.err.println "HEre are the files in my copurs; " + c.filesInArchive()
     File ttlDir = new File(buildDir, "ttl")
+
+
+
     if (! ttlDir.exists()) {
       ttlDir.mkdir()
     }
     File ttlFile = new File(ttlDir,"cts.ttl")
-    c.ttl(ttlFile, prefix, ttlDir)
+    //.ttl(ttlFile, prefix, ttlDir)
+    c.turtleizeRepository(ttlDir)
   }
 }
 
@@ -196,7 +207,7 @@ imgttl.doLast {
     rdfDir.mkdir()
   }
   File ttlFile = new File(rdfDir,"citeimgs.ttl")
-   
+
   ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
 
   File imageDir = new File("${buildDir}/images")
@@ -247,7 +258,7 @@ task idxttl () {
 idxttl.doLast {
   boolean prefix = project.hasProperty("prefix-all")
 
-  File inv 
+  File inv
   File idxDir
 
   if ((idxinv != "") && (idxarchive != ""))   {
@@ -286,15 +297,15 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 
     def srcFiles =  [ctsttl, collectionsttl, idxttl, citeimgttl]
 
-    File ttl = new File("${buildDir}/ttl/all.ttl")        
+    File ttl = new File("${buildDir}/ttl/all.ttl")
     ttl.append( prefix )
 
     srcFiles.each {  f ->
       if (f.exists()) {
-	ttl.withWriterAppend(charEnc) {writer -> 
-	  f.newReader(charEnc).eachLine {String line -> 
-	    writer << "\n${line}"         
-	  } 
+	ttl.withWriterAppend(charEnc) {writer ->
+	  f.newReader(charEnc).eachLine {String line ->
+	    writer << "\n${line}"
+	  }
 	}
       } }
 
@@ -345,5 +356,3 @@ task zipTtl(type: Zip, dependsOn: [ttl]) {
 artifacts {
   rdf zipTtl
 }
-
-
