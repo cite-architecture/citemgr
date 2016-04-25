@@ -16,7 +16,7 @@ buildscript {
 
 repositories {
     mavenCentral()
-    
+
     maven {
         url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
     }
@@ -68,7 +68,7 @@ artifacts {
 
 uploadLib {
   repositories.mavenDeployer {
-    repository(url: nexusRepo) {                   
+    repository(url: nexusRepo) {
       authentication (userName: nexusUser, password: nexusPassword)
     }
   }
@@ -156,20 +156,21 @@ test {
 task addVersion () {
   description = "Adds version info for project and dependencies to tokenMap"
 }
+/*
 addVersion.doLast {
   tokenMap["version"] = version
   StringBuilder depsHtml = new StringBuilder()
   versionMap.keySet().sort().each { k ->
     depsHtml.append("<tr><td>${k}</td><td>${versionMap[k]}</td></tr>\n")
   }
-  tokenMap["deps"] = depsHtml.toString() 
-}
+  tokenMap["deps"] = depsHtml.toString()
+}*/
 
 task conc(type: Copy, dependsOn: [test, addVersion]) {
   description = "Runs concordion tests on markdown source"
   from "${buildDir}/concordion-results"
   into "${buildDir}/concordion-formatted"
-  filter(ReplaceTokens, tokens: tokenMap)
+  //filter(ReplaceTokens, tokens: tokenMap)
 }
 
 

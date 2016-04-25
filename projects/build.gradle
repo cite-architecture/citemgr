@@ -23,7 +23,7 @@ import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.prestochango.CollectionArchive
 import edu.holycross.shot.abracadabra.CiteIndex
 import edu.holycross.shot.nysi.ImgTurtleizer
-      
+
 import org.apache.tools.ant.filters.*
 
 apply plugin: "base"
@@ -57,7 +57,7 @@ if (hasProperty('dse')) {
 */
 repositories {
     mavenCentral()
-    
+
     maven {
         url "http://beta.hpcc.uh.edu/nexus/content/groups/public"
     }
@@ -79,7 +79,7 @@ dependencies {
 /*
 task checkti(type: JavaExec) {
     description = "Verifies contents of configured text inventory."
-    
+
     main = "org.homermultitext.citemanager.TIVerifier"
     args = ["${ctsinventory}"]
 
@@ -143,12 +143,13 @@ task ctsttl() {
 ctsttl.doFirst {
   System.err.println "ctsttl will use inventory ${ctsinventory}"
   System.err.println "and archive ${ctsarchive}."
+  /*
 	  if (ttladditions){
-			System.err.println "Will add ttl data from ${ttladditions}."	
+			System.err.println "Will add ttl data from ${ttladditions}."
 	  } else {
 			System.err.println "No additions specified."
 	  }
-
+*/
 
 }
 ctsttl.doLast {
@@ -207,7 +208,7 @@ imgttl.doLast {
     rdfDir.mkdir()
   }
   File ttlFile = new File(rdfDir,"citeimgs.ttl")
-   
+
   ImgTurtleizer imgttl = new ImgTurtleizer("${buildDir}/images")
 
   File imageDir = new File("${buildDir}/images")
@@ -258,7 +259,7 @@ task idxttl () {
 idxttl.doLast {
   boolean prefix = project.hasProperty("prefix-all")
 
-  File inv 
+  File inv
   File idxDir
 
   if ((idxinv != "") && (idxarchive != ""))   {
@@ -297,15 +298,15 @@ task ttl (dependsOn: [ctsttl, imgttl, ccttl, idxttl]) {
 
     def srcFiles =  [ctsttl, collectionsttl, idxttl, citeimgttl]
 
-    File ttl = new File("${buildDir}/ttl/all.ttl")        
+    File ttl = new File("${buildDir}/ttl/all.ttl")
     ttl.append( prefix )
 
     srcFiles.each {  f ->
       if (f.exists()) {
-	ttl.withWriterAppend(charEnc) {writer -> 
-	  f.newReader(charEnc).eachLine {String line -> 
-	    writer << "\n${line}"         
-	  } 
+	ttl.withWriterAppend(charEnc) {writer ->
+	  f.newReader(charEnc).eachLine {String line ->
+	    writer << "\n${line}"
+	  }
 	}
       } }
 
@@ -356,5 +357,3 @@ task zipTtl(type: Zip, dependsOn: [ttl]) {
 artifacts {
   rdf zipTtl
 }
-
-
