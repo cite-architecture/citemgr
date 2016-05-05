@@ -127,9 +127,11 @@ ctstab.doLast() {
   println "build corpus from " + ctsinventory + " and " + ctsarchive
   println "Work in " + buildDir
   File inv = new File("${ctsinventory}")
+  File citationConfig = new File("${ctscitationconfig}")
   File textArchive = new File("${ctsarchive}")
-  File schema =    new File("${project.rootDir}/${textInvSchema}")
-  Corpus c = new Corpus(inv, textArchive, schema)
+  File tiSchema =    new File("${project.rootDir}/${textInvSchema}")
+  File citationConfSchema =    new File("${project.rootDir}/${citationConfSchema}")
+  Corpus c = new Corpus(inv, citationConfig, textArchive, tiSchema)
   c.debug = 10
   c.tabulateRepository(new File(buildDir, "tabs"))
 }
@@ -140,8 +142,14 @@ task ctsttl() {
 }
 ctsttl.doFirst {
   System.err.println "ctsttl will use inventory ${ctsinventory}"
-  System.err.println "and archive ${ctsarchive}"
-
+  System.err.println "and archive ${ctsarchive}."
+  /*
+	  if (ttladditions){
+			System.err.println "Will add ttl data from ${ttladditions}."
+	  } else {
+			System.err.println "No additions specified."
+	  }
+*/
 
 }
 ctsttl.doLast {
@@ -152,17 +160,20 @@ ctsttl.doLast {
   File inv
   File citeConf
   File archiveDir
+  File citationConfig
+  String prefix = project.prefixString
 
   if ((ctsinventory != "") && (ctsarchive != "")) {
     try {
       inv = new File("${ctsinventory}")
       citeConf = new File("${ctscitationconfig}")
       archiveDir = new File("${ctsarchive}")
+	  citationConfig = new File("${ctscitationconfig}")
     } catch (Exception e) {
       System.err.println "ctsttl: unable to create inventory and archive!"
       throw e
     }
-    //Corpus c = new Corpus(inv,archiveDir, new File("${project.rootDir}/${textInvSchema}"))
+    Corpus c = new Corpus(inv,citationConfig,archiveDir, new File("${project.rootDir}/${textInvSchema}"))
 
     // invFile, configFile, basedir
     Corpus c = new Corpus(inv,citeConf, archiveDir)
@@ -177,8 +188,7 @@ ctsttl.doLast {
       ttlDir.mkdir()
     }
     File ttlFile = new File(ttlDir,"cts.ttl")
-    //.ttl(ttlFile, prefix, ttlDir)
-    c.turtleizeRepository(ttlDir)
+    c.turtleizeRepository(ttlDir, true)
   }
 }
 
