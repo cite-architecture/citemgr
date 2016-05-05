@@ -7,11 +7,14 @@ project.ext {
     // Path to text inventory file:
     ctsinventory = ""
 
-	// Path to citation-configuration file:
-    ctscitationconfig = ""	
+    // Path to citation configuration file:
+    ctscitationconfig = ""
 
     // Path to directory where XML editions are found:
     ctsarchive = ""
+
+
+
 
     // 2. Configuration of image repository.
     // Path to directory with csv files defining image collections.
@@ -20,7 +23,7 @@ project.ext {
     imgcolldir = "/dev/null"
 
     // Optional value for ant property to filter in image collections.
-    // You can use this to set a configurable directory for the root 
+    // You can use this to set a configurable directory for the root
     // directory for your pyramidal tiff files.
     pyramids = ""
 
@@ -40,12 +43,12 @@ project.ext {
 
 
     // RDF name space abbreviations.
-    prefixString = "@prefix dse:        <http://www.homermultitext.org/dse/rdf/> . \n@prefix cts:        <http://www.homermultitext.org/cts/rdf/> .\n@prefix cite:        <http://www.homermultitext.org/cite/rdf/> .\n@prefix hmt:        <http://www.homermultitext.org/hmt/rdf/> .\n@prefix citedata:        <http://www.homermultitext.org/hmt/citedata/> .\n@prefix dcterms: <http://purl.org/dc/terms/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. \n@prefix  xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix olo:     <http://purl.org/ontology/olo/core#> .\n@prefix lex:        <http://data.perseus.org/rdfverbs/> .\n@prefix pal: <http://shot.holycrossedu/rdfverbs/pal/> .\n@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix latepig: <http://shot.holycross.edu/rdf/latepig/> .\n@prefix chron: <http://shot.holycross.edu/chron/rdf/> .\n@prefix owl:        <http://www.w3.org/2002/07/owl#> .\n\n"
+    prefixString = "@prefix dse:        <http://www.homermultitext.org/dse/rdf/> . \n@prefix cts:        <http://www.homermultitext.org/cts/rdf/> .\n@prefix cite:        <http://www.homermultitext.org/cite/rdf/> .\n@prefix hmt:        <http://www.homermultitext.org/hmt/rdf/> .\n@prefix citedata:        <http://www.homermultitext.org/hmt/citedata/> .\n@prefix dcterms: <http://purl.org/dc/terms/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>. \n@prefix  xsd: <http://www.w3.org/2001/XMLSchema#> .\n@prefix olo:     <http://purl.org/ontology/olo/core#> .\n@prefix lex:        <http://data.perseus.org/rdfverbs/> .\n@prefix pal: <http://shot.holycrossedu/rdfverbs/pal/> .\n@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix owl:        <http://www.w3.org/2002/07/owl#> .\n\n"
 
 
 // boolean value configuring whether to include
     // prefix statements with indivudal ttl files or not.
-    // If false, prefix statements will only be included 
+    // If false, prefix statements will only be included
     // in the composite 'all.ttl' file.
     prefix = false
 }

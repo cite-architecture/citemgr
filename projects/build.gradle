@@ -158,6 +158,7 @@ ctsttl.doLast {
   }
 
   File inv
+  File citeConf
   File archiveDir
   File citationConfig
   String prefix = project.prefixString
@@ -165,6 +166,7 @@ ctsttl.doLast {
   if ((ctsinventory != "") && (ctsarchive != "")) {
     try {
       inv = new File("${ctsinventory}")
+      citeConf = new File("${ctscitationconfig}")
       archiveDir = new File("${ctsarchive}")
 	  citationConfig = new File("${ctscitationconfig}")
     } catch (Exception e) {
@@ -173,13 +175,20 @@ ctsttl.doLast {
     }
     Corpus c = new Corpus(inv,citationConfig,archiveDir, new File("${project.rootDir}/${textInvSchema}"))
 
+    // invFile, configFile, basedir
+    Corpus c = new Corpus(inv,citeConf, archiveDir)
+
+
+    System.err.println "HEre are the files in my copurs; " + c.filesInArchive()
     File ttlDir = new File(buildDir, "ttl")
+
+
+
     if (! ttlDir.exists()) {
       ttlDir.mkdir()
     }
     File ttlFile = new File(ttlDir,"cts.ttl")
     c.turtleizeRepository(ttlDir, true)
-    //c.turtelizeRepository(ttlFile, prefix, ttlDir)
   }
 }
 
