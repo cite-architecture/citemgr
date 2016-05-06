@@ -175,9 +175,6 @@ ctsttl.doLast {
     }
     Corpus c = new Corpus(inv,citationConfig,archiveDir, new File("${project.rootDir}/${textInvSchema}"))
 
-    // invFile, configFile, basedir
-    Corpus c = new Corpus(inv,citeConf, archiveDir)
-
 
     System.err.println "Here are the files in my corpus; " + c.filesInArchive()
     File ttlDir = new File(buildDir, "ttl")
