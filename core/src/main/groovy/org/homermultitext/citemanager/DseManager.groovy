@@ -6,7 +6,7 @@ import edu.harvard.chs.cite.CtsUrn
 import edu.harvard.chs.cite.CiteUrn
 
 import edu.holycross.shot.hocuspocus.Corpus
-import edu.holycross.shot.hocuspocus.TabUtil
+import edu.holycross.shot.hocuspocus.TablesUtil
 import edu.holycross.shot.prestochango.CollectionArchive
 
 import au.com.bytecode.opencsv.CSVReader
@@ -40,26 +40,26 @@ class DseManager {
 
 
 
-  
+
   //////////////// METHODS FOR GETTING TABULAR DATA FROM DSE RELATIONS ////////////////
-  
+
 
   /* USE THIS:
    * @returns A list of CTS URN values.
    * @throws Exception if artifactStr is not a valid CiteUrn.
-   ArrayList textNodesForSurface(String artifactStr) 
+   ArrayList textNodesForSurface(String artifactStr)
   */
-  
+
   ArrayList tabDataForSurface(String artifactStr, Corpus corpus, File tabDir)  {
     def txtNodesForSurface = this.textNodesForSurface(artifactStr)
     corpus.tabulateRepository(tabDir)
     def ctsUrns = this.textNodesForSurface(artifactStr)
-    TabUtil tab = new TabUtil()
+    TablesUtil tab = new TablesUtil()
     if (debug > 0) { println "tabDataForSurface:  urns: " + ctsUrns }
-    return tab.tabEntriesForDirectory(tabDir, ctsUrns)    
+    return tab.tabEntriesForDirectory(tabDir, ctsUrns)
   }
 
-  
+
 
 
 
@@ -68,12 +68,12 @@ class DseManager {
   /** Creates the CITE graph representation of all relations
    * indexed to the default image of given text-bearing surface.
    * @param urnStr CITE URN of a text-bearing surface, as a String value
-   * @returns CITE graph XML, with link to XSL for human 
+   * @returns CITE graph XML, with link to XSL for human
    * reading as a web page.
    * @throws Exception if DSE relations are not configured, or if
    * urnStr is not a valid CITE URN.
    */
-  String getVisualInventoryXml (String urnStr) 
+  String getVisualInventoryXml (String urnStr)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
@@ -87,11 +87,11 @@ class DseManager {
   /** Creates the CITE graph representation of all relations
    * indexed to the default image of given text-bearing surface.
    * @param tbsUrn CITE URN of a text-bearing surface.
-   * @returns CITE graph XML, with link to XSL for human 
+   * @returns CITE graph XML, with link to XSL for human
    * reading as a web page.
    * @throws Exception if DSE relations are not configured.
    */
-  String getVisualInventoryXml (CiteUrn tbsUrn)  
+  String getVisualInventoryXml (CiteUrn tbsUrn)
   throws Exception {
     CiteUrn defaultImageUrn = this.imageForTbs(tbsUrn)
     def imgMaps = imageMapsByText(defaultImageUrn)
@@ -115,7 +115,7 @@ class DseManager {
 	      sequence {
 		label ("${txt}")
 		value {
-		  
+
 		  def imgMapping = imgMaps[txt]
 		  imgMapping.each { img ->
 		    node (type: "text", s : "${img[1]}", v : "${verb}") {
@@ -134,14 +134,14 @@ class DseManager {
   }
 
 
-  /** Cycles through all files in textImageIndexFiles, and creates 
+  /** Cycles through all files in textImageIndexFiles, and creates
    * map of text passages indexed to a given image.
    * @param urnStr URN of the image to map, as a String.
    * @returns The map expressed as a CITE graph in
    * XML.
    * @throws Exception if urnStr is not a valid URN.
    */
-  LinkedHashMap imageMapsByText(String urnStr) 
+  LinkedHashMap imageMapsByText(String urnStr)
   throws Exception {
     if (debug > 0)  { System.err.println ("Get maps for urn with string val " + urnStr) }
     try {
@@ -153,7 +153,7 @@ class DseManager {
     }
   }
 
-  /** Cycles through all files in textImageIndexFiles, and creates 
+  /** Cycles through all files in textImageIndexFiles, and creates
    * map of text passages indexed to a given image.
    * @param img The image to map.
    * @returns The map expressed as a CITE graph in XML.
@@ -161,7 +161,7 @@ class DseManager {
   LinkedHashMap imageMapsByText(CiteUrn img) {
     if (debug > 0) {    System.err.println("Find mappings for " + img)}
 
-    
+
     if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
       throw new Exception ("DseManager:imageMapsByText: no index files configured.")
     }
@@ -183,18 +183,18 @@ class DseManager {
 	  nodeMap[k] = singleMap[k]
 	}
       }
-      
+
 
       if (debug > 0) {
 	System.err.println "file ${f}: map:"
 	System.err.println singleMap
-	System.err.println "node map now has : " 
+	System.err.println "node map now has : "
 	System.err.println "${nodeMap.keySet().size()} keys\n\n"
 	System.err.println nodeMap
       }
     }
 
-    
+
     return nodeMap
   }
 
@@ -208,7 +208,7 @@ class DseManager {
    * @returns The map expressed as a CITE graph in XML.
    * @throws Exception if imgStr is not a valid CITE URN.
    */
-  LinkedHashMap imageMapsByText(String imgStr, File indexFile) 
+  LinkedHashMap imageMapsByText(String imgStr, File indexFile)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(imgStr)
@@ -231,7 +231,7 @@ class DseManager {
       System.err.println("DseMgr:imageMapsByText for file " + indexFile)
       System.err.println("Its text contens = " + indexFile.readLines().size() + " lines.")
     }
-    
+
     if ( !indexFile.getName() ==~ /.+csv/) {
       System.err.println "Only dealing with csv:  no match for " + indexFile
     } else {
@@ -272,7 +272,7 @@ class DseManager {
    * 1. image to TBS
    * 2. text to TBS
    * 3. text to image
-   * 
+   *
    * Tests currently verify that a single default image is
    * indexed to TBS, that an identical set of text nodes are indexed
    * to TBS and the default image.
@@ -280,7 +280,7 @@ class DseManager {
    * @param urnStr URN of the text-bearing surface to validate, as a String value.
    * @returns True if all tests pass.
    */
-  boolean verifyTbs(String urnStr) 
+  boolean verifyTbs(String urnStr)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
@@ -299,7 +299,7 @@ class DseManager {
    * 1. image to TBS
    * 2. text to TBS
    * 3. text to image
-   * 
+   *
    * Tests currently verify that a single default image is
    * indexed to TBS, that an identical set of text nodes are indexed
    * to TBS and the default image.
@@ -340,7 +340,7 @@ class DseManager {
    */
   ArrayList dseReport(CiteUrn urn) {
     DseReport tbsToImgReport
-    
+
     CiteUrn img = imageForTbs(urn)
     if (! img) {
       tbsToImgReport = new DseReport(success: false, summary: null)
@@ -370,7 +370,7 @@ class DseManager {
        System.err.println "report: " + cf
     }
 
-     
+
     } else {
 
       def disjunctSet = (surfSet + imgSet) - surfSet.intersect(imgSet)
@@ -387,12 +387,12 @@ class DseManager {
     DseReport mappingReport = new DseReport(success: validMapping, summary: cf)
 
     def report = [tbsToImgReport, mappingReport]
-    return report    
+    return report
   }
 
 
 
-  
+
   //////////////// TRIO OF METHODS FOR TEXT -> SURFACE INDEX ////////////////
 
 
@@ -403,7 +403,7 @@ class DseManager {
    * @returns A list of CTS URN values.
    * @throws Exception if artifactStr is not a valid CiteUrn.
    */
-  ArrayList textNodesForSurface(String artifactStr) 
+  ArrayList textNodesForSurface(String artifactStr)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(artifactStr)
@@ -422,7 +422,7 @@ class DseManager {
    * @returns A list of CTS URN values.
    * @throws Exception if index files are not configured.
    */
-  ArrayList textNodesForSurface(CiteUrn urn)  
+  ArrayList textNodesForSurface(CiteUrn urn)
   throws Exception {
 
     if ((! this.textTbsIndexFiles) || (this.textTbsIndexFiles.size() == 0)) {
@@ -433,11 +433,11 @@ class DseManager {
     // cycle all index files, and invoke textNodesForImage with file
     this.textTbsIndexFiles.each { f ->
       def singleList = this.textNodesForSurface(urn, f)
-      singleList.each { 
+      singleList.each {
 	nodeList.add(it)
       }
     }
-    return nodeList  
+    return nodeList
   }
 
 
@@ -448,7 +448,7 @@ class DseManager {
    * @returns A list of CTS URN values.
    * @throws Exception if artifactStr is not a valid CITE URN.
    */
-  ArrayList textNodesForSurface(String artifactStr, File indexFile)   
+  ArrayList textNodesForSurface(String artifactStr, File indexFile)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(artifactStr)
@@ -473,7 +473,7 @@ class DseManager {
     def results = []
     def indexRecord =  indexFile.readLines().grep( ~/^.+,"?${urn}"?$/ )
 
-    //     def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
+    //     def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ )
     if (debug > 0) {
       System.err.println "textNodesForSurface: file ${indexFile}, grepped " + indexRecord + " from " + urn
     }
@@ -506,7 +506,7 @@ class DseManager {
    * @returns A list of CTS URN values.
    * @throws Exception if imgStr is not a valid CiteUrn.
    */
-  ArrayList textNodesForImage(String imgStr) 
+  ArrayList textNodesForImage(String imgStr)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(imgStr)
@@ -524,7 +524,7 @@ class DseManager {
    * @returns A list of CTS URN values.
    * @throws Exception if indexes not configured.
    */
-  ArrayList textNodesForImage(CiteUrn urn) 
+  ArrayList textNodesForImage(CiteUrn urn)
   throws Exception {
     if ((! this.textImageIndexFiles) || (this.textImageIndexFiles.size() == 0)) {
       throw new Exception ("DseManager:texNodesForImage: no index files configured.")
@@ -534,11 +534,11 @@ class DseManager {
     // cycle all index files, and invoke textNodesForImage with file
     this.textImageIndexFiles.each { f ->
       def singleList = this.textNodesForImage(urn, f)
-      singleList.each { 
+      singleList.each {
 	nodeList.add(it)
       }
     }
-    return nodeList  
+    return nodeList
   }
 
 
@@ -552,7 +552,7 @@ class DseManager {
    * @returns A list of CTS URN values.
    * @throws Exception if indexes not configured.
    */
-  ArrayList textNodesForImage(String imgStr, File indexFile) 
+  ArrayList textNodesForImage(String imgStr, File indexFile)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(imgStr)
@@ -575,7 +575,7 @@ class DseManager {
   ArrayList textNodesForImage(CiteUrn img, File indexFile) {
     def results = []
     if (debug > 0) { System.err.println "textNodesForImage: grep in ${indexFile} for ${img}" }
-    def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ ) 
+    def indexRecord =  indexFile.readLines().grep( ~/^.+${img}@.+$/ )
     indexRecord.each { ln ->
       String urnStr = ln.replaceFirst(/,.+/, '').replaceAll(/"/,'')
 
@@ -602,7 +602,7 @@ class DseManager {
    * @returns The URN of the default image, or null if none found.
    * @throws Exception if indexes not configured.
    */
-  CiteUrn imageForTbs(String urnStr) 
+  CiteUrn imageForTbs(String urnStr)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
@@ -619,9 +619,9 @@ class DseManager {
    * @returns The URN of the default image, or null if none found.
    * @throws Exception if indexes not configured.
    */
-  CiteUrn imageForTbs(CiteUrn urn) 
+  CiteUrn imageForTbs(CiteUrn urn)
   throws Exception {
-    
+
     if ((! this.tbsImageIndexFiles) || (this.tbsImageIndexFiles.size() == 0)) {
       throw new Exception ("DseManager:imageForTbs: no index files configured.")
     }
@@ -636,7 +636,7 @@ class DseManager {
        defaultImage = imgUrn
       }
     }
-    return defaultImage  
+    return defaultImage
   }
 
 
@@ -646,7 +646,7 @@ class DseManager {
    * @returns A CITE URN identifying the default image.
    * @throws Exception if urnStr is not a valid CITE URN.
    */
-  CiteUrn imageForTbs(String urnStr, File indexFile) 
+  CiteUrn imageForTbs(String urnStr, File indexFile)
   throws Exception {
     try {
       CiteUrn u = new CiteUrn(urnStr)
@@ -666,10 +666,10 @@ class DseManager {
    * @throws Exception if no index files defined, or
    * if multiple default images found.
    */
-  CiteUrn imageForTbs(CiteUrn urn, File indexFile) 
+  CiteUrn imageForTbs(CiteUrn urn, File indexFile)
   throws Exception {
     def lines = indexFile.readLines()
-    def indexRecord =  lines.grep( ~/^.*${urn}"?,.+$/ ) 
+    def indexRecord =  lines.grep( ~/^.*${urn}"?,.+$/ )
     if (debug > 1) {
       System.err.println "Grepping for ${urn} yielded " + indexRecord + " of size " + indexRecord.size()
       }
@@ -686,7 +686,7 @@ class DseManager {
     CiteUrn imgUrn = new CiteUrn(urnStr)
     return imgUrn
     break
-    
+
 
     default:
     throw new Exception("DseManager:imageForTbs: found more than one default image for ${urn} in indexFile.")
@@ -696,6 +696,6 @@ class DseManager {
   }
 
 
- 
+
 
 }
