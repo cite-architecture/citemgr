@@ -6,6 +6,7 @@ import static groovy.test.GroovyAssert.shouldFail
 
 
 import edu.harvard.chs.cite.CtsUrn
+import edu.harvard.chs.cite.CiteUrn
 
 /** Class to test cite library's CiteCollection class.
 */
@@ -23,6 +24,9 @@ class TestDseManager {
 
     def expectedUrns =     [ new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.1"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.2"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.3"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.4"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.5"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.6"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.7"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.8"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.9"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.10"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.11"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.12"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.13"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.14"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.15"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.16"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.17"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.18"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.19"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.20"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.21"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.22"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.23"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.24"), new CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:17.25")]
 
+
+    // Two signatures to test: URN as string value, and
+    // as CITE URN object
     def actualUrns = dsem.textNodesForImage(testImage)
     assert expectedUrns.size() == actualUrns.size()
 
@@ -30,7 +34,12 @@ class TestDseManager {
         assert u.toString() == actualUrns[i].toString()
     }
 
-    //assert expectedUrns as Set == actualUrns as Set
+    actualUrns = dsem.textNodesForImage(new CiteUrn(testImage))
+    assert expectedUrns.size() == actualUrns.size()
+
+    expectedUrns.eachWithIndex { u,i ->
+        assert u.toString() == actualUrns[i].toString()
+    }
   }
 
 
