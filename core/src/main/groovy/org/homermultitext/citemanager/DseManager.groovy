@@ -233,7 +233,7 @@ class DseManager {
     if ( !indexFile.getName() ==~ /.+csv/) {
       System.err.println "Only dealing with csv:  no match for " + indexFile
     } else {
-      SafeCsvReader reader = new SafeCsvReader(new FileReader(indexFile))
+      SafeCsvReader reader = new SafeCsvReader(new File(indexFile))
       def things = reader.readAll()
       if (debug > 0) {
 	System.err.println "imageMapsByText: from ${indexFile}, read " + things.size() + " entries"

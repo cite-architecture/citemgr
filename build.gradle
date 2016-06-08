@@ -51,7 +51,7 @@ if (hasProperty('conf')) {
 
 allprojects {
   group = "org.homermultitext"
-  version = '1.0.1'	
+  version = '1.0.2'	
   tasks.withType(Jar) {
     archivesBaseName = "citemgr"
   }
