@@ -16,7 +16,7 @@ import edu.holycross.shot.safecsv.SafeCsvReader
  */
 class DseManager {
 
-  public Integer debug = 10
+  public Integer debug = 0
 
 
   /** List of files indexing text-bearing surfaces to images. */
