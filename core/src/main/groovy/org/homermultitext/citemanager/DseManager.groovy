@@ -9,14 +9,14 @@ import edu.holycross.shot.hocuspocus.Corpus
 import edu.holycross.shot.hocuspocus.TablesUtil
 import edu.holycross.shot.prestochango.CollectionArchive
 
-import au.com.bytecode.opencsv.CSVReader
-
+//import au.com.bytecode.opencsv.CSVReader
+import edu.holycross.shot.safecsv.SafeCsvReader
 
 /** A class for managing a standard Digital Scholarly Editions archive.
  */
 class DseManager {
 
-  public Integer debug = 0
+  public Integer debug = 10
 
 
   /** List of files indexing text-bearing surfaces to images. */
@@ -35,8 +35,6 @@ class DseManager {
   /** Empty constructor */
   DseManager()   {
   }
-
-
 
 
 
@@ -235,7 +233,7 @@ class DseManager {
     if ( !indexFile.getName() ==~ /.+csv/) {
       System.err.println "Only dealing with csv:  no match for " + indexFile
     } else {
-      CSVReader reader = new CSVReader(new FileReader(indexFile))
+      SafeCsvReader reader = new SafeCsvReader(new FileReader(indexFile))
       def things = reader.readAll()
       if (debug > 0) {
 	System.err.println "imageMapsByText: from ${indexFile}, read " + things.size() + " entries"

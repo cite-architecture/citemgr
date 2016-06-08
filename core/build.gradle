@@ -42,6 +42,9 @@ dependencies {
   compile group : 'edu.holycross.shot', name : 'prestochango', version : versionMap['prestochango']
   compile group : 'edu.holycross.shot', name : 'abracadabra', version : versionMap['abracadabra']
   compile group: 'edu.harvard.chs', name: 'cite', version: versionMap['cite']
+
+
+  compile group: 'edu.holycross.shot', name: 'safecsv', version: versionMap['safecsv']
   //compile group: 'edu.harvard.chs', name : 'greekutils' , version: versionMap['greekutils']
   //compile group:       'org.homermultitext', name : 'hmt-utils', version: versionMap["hmtutils"]
 

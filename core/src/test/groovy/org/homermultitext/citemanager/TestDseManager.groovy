@@ -17,6 +17,10 @@ class TestDseManager {
 
   def textToSurfaceFiles = [new File("testdata/venA17-textToFolio-Iliad.csv")]
   def testFolio = "urn:cite:hmt:msA.224v"
+
+
+
+
   @Test
   void testTextImageRelation() {
     DseManager dsem = new DseManager()
@@ -58,7 +62,6 @@ class TestDseManager {
 
     actualUrns = dsem.textNodesForSurface(new CiteUrn(testFolio))
     assert expectedUrns.size() == actualUrns.size()
-
 
   }
 

@@ -3,14 +3,12 @@
 
 
 project.ext {
-    
+
     // boolean value configuring whether to include
     // prefix statements with indivudal ttl files or not.
-    // If false, prefix statements will only be included 
+    // If false, prefix statements will only be included
     // in the composite 'all.ttl' file.
     prefix = false
 
-    // name to use as source for tokenized input in generating
-    // token editions
-    tokensFile = "build/tokenization/tokens.txt"	
+    	
 }
