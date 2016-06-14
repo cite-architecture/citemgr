@@ -149,7 +149,17 @@ class DseManager {
 
 
 
-
+  /** Reads entries from a list of csv files as mappings of DSE surface-image relation, and
+  * assigns values to surfaceToImageMap and imageToSurfaceMap.  Note that each of
+  * these is a one-to-one mapping (String<->String).
+  * @param surfaceToImageCsv CSV file with entries for text bearing surface in column 0,
+  * and corresponding value for image in column 1.
+  */
+  void mapSurfaceToTextFromCsv(ArrayList surfaceToImageFiles) {
+    surfaceToImageFiles.each {
+      mapSurfaceToTextFromCsv(it)
+    }
+  }
 
 
 
