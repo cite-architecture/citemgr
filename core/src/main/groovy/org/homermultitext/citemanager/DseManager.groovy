@@ -208,6 +208,11 @@ class DseManager {
     return surfaceToTextMap[surfaceId]
   }
 
+
+  ArrayList textsForImage(String imgId) {
+    return imageToTextMap[imgId]
+  }
+
   DseManager reduceByTbs(String surfaceId) {
     DseManager reduced = new DseManager()
 
