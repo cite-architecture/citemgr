@@ -44,7 +44,7 @@ class DseManager {
   def imageToTextMap = [:]
 
   /** One-to-many mapping of text nodes to image URNs with RoI.*/
-  def textToImageRoI = [:]
+  def textToImageRoIMap = [:]
 
   /** Empty constructor */
   DseManager()   {
@@ -163,9 +163,41 @@ class DseManager {
 
 
 
-  ArrayList mapImageToTextFromCsv(File imageToText) {
+    /** Reads entries in a csv file as mappings of DSE text-image relation, and
+    * assigns values to imageToTextMap and textToImageRoIMap.  Note that textToImageRoIMap
+    * a one-to-one mapping (String<->String), but imageToTextMap is a one-to-many mapping
+    * (String for reference image -> ArrayList of text nodes).
+    * @param imageToTextCsv CSV file with entries for text in column 0,
+    * and corresponding value for image with RoI in column 1.
+    */
+  ArrayList mapImageToTextFromCsv(File imageToTextCsv) {
+    SafeCsvReader srcReader = new SafeCsvReader(imageToTextCsv)
+    srcReader.readAll().each { columns ->
+      String textNode = columns[0]
+      CiteUrn imageUrn = new CiteUrn(columns[1])
+      String image = imageUrn.reduceToObject()
+
+      // one-to-one mapping of text URN
+      // to full image URN with ROI:
+      textToImageRoIMap[textNode] = columns[1]
+
+      // other direction is many-to-one,
+      // keyed by surface String  to list
+      // of text nodes
+      def textList = []
+      if (imageToTextMap[image]) {
+        textList = imageToTextMap[image]
+      }
+      textList.add(textNode)
+      imageToTextMap[image] = textList
+    }
   }
 
+  void mapImageToTextFromCsv(ArrayList imageToTextFiles) {
+    imageToTextFiles.each {
+      mapImageToTextFromCsv(it)
+    }
+  }
 
 
 }
