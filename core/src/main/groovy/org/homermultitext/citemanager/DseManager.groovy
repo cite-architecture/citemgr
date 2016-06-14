@@ -86,13 +86,24 @@ class DseManager {
     return valid
   }
 
+
+
+
+  /** Reads entries from a list of csv files as mappings of DSE surface-image relation, and
+  * assigns values to surfaceToImageMap and imageToSurfaceMap.  Note that each of
+  * these is a one-to-one mapping (String<->String).
+  * @param surfaceToImageCsv CSV file with entries for text bearing surface in column 0,
+  * and corresponding value for image in column 1.
+  */
   void mapSurfaceToImageFromCsv(ArrayList surfaceToImageFiles) {
     surfaceToImageFiles.each {
       mapSurfaceToImageFromCsv(it)
     }
   }
 
-  /** Reads entries in a csv file as mappings of DSE surface-image relation.
+  /** Reads entries in a csv file as mappings of DSE surface-image relation, and
+  * assigns values to surfaceToImageMap and imageToSurfaceMap.  Note that each of
+  * these is a one-to-one mapping (String<->String).
   * @param surfaceToImageCsv CSV file with entries for text bearing surface in column 0,
   * and corresponding value for image in column 1.
   */
@@ -107,14 +118,41 @@ class DseManager {
 
 
 
-
-  ArrayList mapSurfaceToTextFromCsv(File surfaceToText) {
-    SafeCsvReader srcReader = new SafeCsvReader(surfaceToImageCsv)
+  /** Reads entries in a csv file as mappings of DSE text-surface relation, and
+  * assigns values to surfaceToTextMap and textToSurfaceMap.  Note that textToSurfaceMap
+  * a one-to-one mapping (String<->String), but surfaceToTextMap is a one-to-many mapping
+  * (String for surface -> ArrayList of text nodes).
+  * @param textToSurfaceCsv CSV file with entries for text bearing surface in column 0,
+  * and corresponding value for image in column 1.
+  */
+  void mapSurfaceToTextFromCsv(File textToSurfaceCsv) {
+    SafeCsvReader srcReader = new SafeCsvReader(textToSurfaceCsv)
     srcReader.readAll().each { columns ->
-      surfaceToImageMap[columns[0]] =  columns[1]
-      textToSurfaceMap[columns[1]] = columns[0]
+      String textNode = columns[0]
+      String surface = columns[1]
+
+      // one-to-one mapping:
+      textToSurfaceMap[textNode] = surface
+
+      // other direction is many-to-one,
+      // keyed by surface String  to list
+      // of text nodes
+      def textList = []
+      if (surfaceToTextMap[surface]) {
+        textList = surfaceToTextMap[surface]
+      }
+      textList.add(textNode)
+      surfaceToTextMap[surface] = textList
+
     }
   }
+
+
+
+
+
+
+
   ArrayList mapImageToTextFromCsv(File imageToText) {
   }
 
