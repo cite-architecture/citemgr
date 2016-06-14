@@ -213,9 +213,35 @@ class DseManager {
     return imageToTextMap[imgId]
   }
 
+  LinkedHashMap textMappingsForImage(String img) {
+    def textUrns = textsForImage(img)
+    def textHash = [:]
+    textUrns.each { txt ->
+      textHash[txt] = textToImageRoIMap[txt]
+    }
+    return textHash
+  }
+
   DseManager reduceByTbs(String surfaceId) {
     DseManager reduced = new DseManager()
+    String img = imageForSurface(surfaceId)
+    reduced.surfaceToImageMap = ["${surfaceId}": img]
+    reduced.imageToSurfaceMap = ["${img}": surfaceId]
+    println "Reduced surf-img map: " + reduced.surfaceToImageMap
 
+    reduced.surfaceToTextMap = ["${surfaceId}": textsForSurface(surfaceId)]
+    reduced.textToSurfaceMap = [:]
+    reduced.surfaceToTextMap[surfaceId].each { k,v ->
+      reduced.textToSurfaceMap[v] = k
+    }
+    println "Texts for surface: " + reduced.surfaceToTextMap
+
+    reduced.imageToTextMap = ["${img}": textsForImage(img)]
+    reduced.textToImageRoIMap = textMappingsForImage(img)
+
+
+
+    println "Text-image mapping: " + reduced.textToImageRoIMap
   }
 
 }
