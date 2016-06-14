@@ -33,7 +33,7 @@ class TestDseMgrSurfaceText{
 
   // test signature indexing single CSV file:
   @Test
-  void testFileListile() {
+  void testFileList() {
     DseManager dsem = new DseManager()
     dsem.mapSurfaceToTextFromCsv(textToSurfaceFiles)
 
