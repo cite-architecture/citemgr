@@ -1,14 +1,7 @@
 package org.homermultitext.citemanager
 
 
-import edu.harvard.chs.cite.TextInventory
-import edu.harvard.chs.cite.CtsUrn
 import edu.harvard.chs.cite.CiteUrn
-
-import edu.holycross.shot.hocuspocus.Corpus
-import edu.holycross.shot.hocuspocus.TablesUtil
-import edu.holycross.shot.prestochango.CollectionArchive
-
 import edu.holycross.shot.safecsv.SafeCsvReader
 
 /** A class for managing a standard Digital Scholarly Editions archive.
@@ -66,6 +59,61 @@ class DseManager {
    * @param urn The text-bearing surface to validate.
    * @returns True if all tests pass.
    */
+
+   // reimplment as:
+   boolean verifyTbs(CiteUrn urn) {
+     // 1. reduceByTbs
+     // 2. validate
+   }
+
+   String summary(){
+     return """
+     Surface-image relations: ${surfaceToImageMap}
+     Surfaces mapped to texts: ${surfaceToTextMap.size()}
+     Text-surface relations: ${textToSurfaceMap.size()}
+     Images mapped to texts: ${imageToTextMap.size()}
+     Text-image relations: ${textToImageRoIMap.size()}
+     """
+   }
+   boolean isValid(String surface) {
+     boolean valid = true
+     DseManager surfaceDse = reduceByTbs(surface)
+     System.err.println(surfaceDse.summary())
+     Set cfSet = [surface] as Set
+     if (surfaceDse.surfaceToImageMap.keySet() != cfSet) {
+       valid = false
+       System.err.println "Set ${surfaceDse.surfaceToImageMap.keySet()} != ${cfSet}"
+     }
+     String img
+     surfaceDse.surfaceToImageMap.each {k,v ->
+       //println "#${k}# -> ${v}"
+       //println "in other words "  + surfaceDse.surfaceToImageMap[k]
+       img = v
+     }
+     System.err.println "Img is " + img
+
+     if (surfaceDse.textToSurfaceMap.keySet() !=  surfaceDse.textToImageRoIMap.keySet()) {
+       // FAILING
+       System.err.println "${surfaceDse.textToSurfaceMap.keySet()} !=  ${surfaceDse.textToImageRoIMap.keySet()}"
+       valid = false
+     }
+     Set surfSet = [surface] as Set
+     if (surfSet != surfaceDse.textToSurfaceMap.values() as Set) {
+        // FAILING
+       System.err.println "${surfSet} does not match ${surfaceDse.textToSurfaceMap.values()}"
+       valid = false
+     }
+     surfaceDse.textToImageRoIMap.each { k,v ->
+       CiteUrn imgUrn = new CiteUrn(v)
+       if (imgUrn.reduceToObject() != img) {
+         System.err.println "For pair ${k}/${v}, ${imgUrn.reduceToObject()} != ${img}"
+         valid = false
+       }
+     }
+
+     return valid
+   }
+   /*
    boolean verifyTbs(CiteUrn urn) {
     boolean valid = true
     String surface = urn.toString()
@@ -86,6 +134,7 @@ class DseManager {
     return valid
   }
 
+*/
 
 
 
@@ -223,25 +272,24 @@ class DseManager {
   }
 
   DseManager reduceByTbs(String surfaceId) {
+    // Add check here:
+    //println "Surface indexed? "+ surfaceToTextMap.keySet().contains(surfaceId)
+
     DseManager reduced = new DseManager()
     String img = imageForSurface(surfaceId)
     reduced.surfaceToImageMap = ["${surfaceId}": img]
     reduced.imageToSurfaceMap = ["${img}": surfaceId]
-    println "Reduced surf-img map: " + reduced.surfaceToImageMap
 
-    reduced.surfaceToTextMap = ["${surfaceId}": textsForSurface(surfaceId)]
+    reduced.surfaceToTextMap[surfaceId] =  textsForSurface(surfaceId)
     reduced.textToSurfaceMap = [:]
-    reduced.surfaceToTextMap[surfaceId].each { k,v ->
-      reduced.textToSurfaceMap[v] = k
+    reduced.surfaceToTextMap[surfaceId].each { txt ->
+      reduced.textToSurfaceMap[txt] = surfaceId
     }
-    println "Texts for surface: " + reduced.surfaceToTextMap
 
     reduced.imageToTextMap = ["${img}": textsForImage(img)]
     reduced.textToImageRoIMap = textMappingsForImage(img)
 
-
-
-    println "Text-image mapping: " + reduced.textToImageRoIMap
+    return reduced
   }
 
 }

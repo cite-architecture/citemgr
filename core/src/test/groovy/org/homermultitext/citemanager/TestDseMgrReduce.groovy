@@ -29,6 +29,20 @@ class TestDseMgrReduce {
     DseManager folioDse = dsem.reduceByTbs("urn:cite:hmt:msA.223v")
     // surfaceId:urn:cite:hmt:vaimg.VA223VN-0725
 
+
+
+  }
+
+
+  // test signature indexing single CSV file:
+  @Test
+  void testValidate() {
+    DseManager dsem = new DseManager()
+    dsem.mapSurfaceToTextFromCsv(textToSurfaceFiles)
+    dsem.mapImageToTextFromCsv(textToImageFiles)
+    dsem.mapSurfaceToImageFromCsv(surfaceToImageFiles)
+
+    assert dsem.isValid("urn:cite:hmt:msA.223v")
   }
 
 }
