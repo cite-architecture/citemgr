@@ -30,15 +30,20 @@ class TestTabForSurface{
     dsem.mapImageToTextFromCsv(textToImageFiles)
     dsem.mapSurfaceToImageFromCsv(surfaceToImageFiles)
 
-/*    def tabdata = dsem.tabDataForSurface(folio, tabFile)
-    println "Tab data: " + tabdata.size() + " entries."
-    println "First is " + tabdata[0]
-    println "Second is " + tabdata[1]
-*/
+    Integer expectedEntries = 25
+    def tabdata = dsem.tabDataForSurface(folio, tabFile)
+    assert tabdata.size() == expectedEntries
+
     def dirdata = dsem.tabDataForSurfaceInDirectory(folio, tabDir)
-    println "Dir data: " + dirdata.size() + " entries."
-    println "First is " + dirdata[0]
-    println "Second is " + dirdata[1]
+    assert dirdata.size() == expectedEntries
+
+    // directory and single file methods should
+    // produce identical results
+    dirdata.eachWithIndex() { ln, idx ->
+      assert ln == tabdata[idx]
+    }
+
+
   }
 
 

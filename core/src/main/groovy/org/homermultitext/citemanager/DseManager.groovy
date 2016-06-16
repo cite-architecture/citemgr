@@ -321,12 +321,9 @@ class DseManager {
     ArrayList textsToCheck =  textsForSurface(surface)
     tabDir.eachFileMatch(~/.*.txt/) { txtFile ->
       Integer prevCount = tabs.size()
-      System.err.println("Check file " + txtFile)
       textsToCheck.each { txt ->
-	System.err.println("Look for " + txt)
 	def oneEntry = tu.tabEntryForUrn(txtFile, txt )
 	if (oneEntry != null) {
-	  System.err.println("Got " + oneEntry)
 	  tabs.add( oneEntry)
 	}
       }
