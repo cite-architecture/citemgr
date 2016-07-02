@@ -86,6 +86,7 @@ task checkti(type: JavaExec) {
     classpath sourceSets.main.output.classesDir
     classpath configurations.runtime
 }
+*/
 
 task checkccinv() {
     description = "Verifies contents of configured collection inventory."
@@ -93,13 +94,14 @@ task checkccinv() {
         System.err.println "checkccinv:  not yet implemented."
     }
 }
-
+/*
 task checkidxinv() {
     description = "Verifies contents of configured collection inventory."
     doLast {
         System.err.println "checkidxinv:  not yet implemented."
     }
 }
+
 
 task checkimginv() {
     description = "Verifies contents of configured collection inventory."
@@ -207,7 +209,7 @@ task imgttl(dependsOn: [filterImgs]) {
   description = "Generates RDF for configured NYSI"
 }
 imgttl.doLast {
-  boolean prefix = project.hasProperty("prefix-all")
+  boolean prefix = project.hasProperty("prefixAll")
 
   File rdfDir = new File("${buildDir}/ttl")
   if (! rdfDir.exists()) {
@@ -235,7 +237,7 @@ task ccttl {
   description = "Generates RDF for Collections configured for prestochango"
 }
 ccttl.doLast {
-  boolean prefix = project.hasProperty("prefix-all")
+  boolean prefix = project.hasProperty("prefixAll")
 
   File schemaFile = new File("${project.rootDir}/${collectionInvSchema}")
 
@@ -263,7 +265,7 @@ task idxttl () {
   description = "Generates RDF for indices configured for abracadabra"
 }
 idxttl.doLast {
-  boolean prefix = project.hasProperty("prefix-all")
+  boolean prefix = project.hasProperty("prefixAll")
 
   File inv
   File idxDir
