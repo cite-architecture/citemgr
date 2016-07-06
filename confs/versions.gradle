@@ -6,7 +6,7 @@
 
  */
 project.ext {
-    groovyVersion = "2.4.6"
+    groovyVersion = "2.+"
 
     jingVersion = "20091111"
     saxonVersion = "8.7"
@@ -17,6 +17,11 @@ project.ext {
 
     // report these dependencies in formal spec:
     versionMap = [
+      "cite" : "1.+",
+      "hocuspocus" : "1.+",
+      "safecsv" : "1.+",
+
+      
       "abracadabra" : "0.3.0",
       "cite" : "1.+",
       "hocuspocus" : "1.+",

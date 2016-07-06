@@ -1,0 +1,17 @@
+project.ext {
+
+  textInventory="/vagrant/hmt-mom/testdata/il17/editions/textinventory.xml"
+  textConfig="/vagrant/hmt-mom/testdata/il17/editions/textconfig.xml"
+
+  textArchive="/vagrant/hmt-mom/testdata/il17/editions"
+  invSchema="/vagrant/hmt-mom/testdata/il17/editions/schemas/TextInventory.rng"
+
+    // Lists of index files to use in verification:
+    folioToImage = "/vagrant/hmt-mom/testdata/il17/indices/venA-folioToImage.csv"
+
+    textToImage = "/vagrant/hmt-mom/testdata/il17/indices/venA-textToImage-Iliad.csv"
+    textToFolio = "/vagrant/hmt-mom/testdata/il17/indices/venA-textToFolio-Iliad.csv"
+
+    scholiaInventories = "/vagrant/hmt-mom/testdata/il17/collections/venA-mainScholia.csv,/vagrant/hmt-mom/testdata/il17/collections/venA-exterior.csv,/vagrant/hmt-mom/testdata/il17/collections/venA-intermarginal.csv,/vagrant/hmt-mom/testdata/il17/collections/venA-interior.csv,/vagrant/hmt-mom/testdata/il17/collections/venA-interlinear.csv"
+
+}
