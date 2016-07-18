@@ -23,9 +23,9 @@ project.ext {
 
       
       "abracadabra" : "0.3.0",
+      "cite" : "1.+",
+      "hocuspocus" : "1.+",
       "nysi" : "0.2.4",
-      "prestochango" : "0.3.8",
-
-
+      "prestochango" : "1.+"
     ]
 }
