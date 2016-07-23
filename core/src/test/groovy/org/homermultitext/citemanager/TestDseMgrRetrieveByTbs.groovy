@@ -22,7 +22,7 @@ class TestDseMgrRetrieveByTbs {
     Integer expectedMappings = 654
     assert dsem.surfaceToImageMap.size() == expectedMappings
 
-    String expectedImg = "urn:cite:hmt:vaimg.VA012VN-0514"
+    String expectedImg = "urn:cite:hmt:vaimg.VA012VN_0514"
     assert dsem.imageForSurface(surf) == expectedImg
   }
 

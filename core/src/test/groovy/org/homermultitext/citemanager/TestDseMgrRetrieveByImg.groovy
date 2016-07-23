@@ -13,7 +13,7 @@ import edu.harvard.chs.cite.CiteUrn
 class TestDseMgrRetrieveByImg {
 
 
-  String img = "urn:cite:hmt:vaimg.VA223VN-0725"
+  String img = "urn:cite:hmt:vaimg.VA223VN_0725"
 
 
   @Test

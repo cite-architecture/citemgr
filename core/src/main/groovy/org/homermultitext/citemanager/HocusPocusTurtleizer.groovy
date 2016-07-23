@@ -1,6 +1,6 @@
 package org.homermultitext.citemanager
 
-import edu.harvard.chs.cite.TextInventory
+import edu.holycross.shot.hocuspocus.TextInventory
 import edu.holycross.shot.hocuspocus.Corpus
 
 /**
