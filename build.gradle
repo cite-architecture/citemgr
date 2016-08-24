@@ -52,7 +52,7 @@ if (hasProperty('conf')) {
 
 
 group = "org.homermultitext"
-version = '3.1.0'	
+version = '3.2.0'	
 
 
 repositories {
@@ -68,10 +68,11 @@ repositories {
 
 dependencies {
   compile group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion
+
   // needed for hocuspocus:
   compile group: 'com.thaiopensource', name:'jing', version: jingVersion
   compile group: 'net.sf.saxon', name: 'saxon-dom', version: saxonVersion
-  compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
+  //compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
 
   // dependencies from versionMap
   compile group: 'edu.holycross.shot', name: 'nysi', version: versionMap['nysi']
@@ -80,10 +81,7 @@ dependencies {
   compile group : 'edu.holycross.shot', name : 'abracadabra', version : versionMap['abracadabra']
   compile group: 'edu.harvard.chs', name: 'cite', version: versionMap['cite']
 
-
   compile group: 'edu.holycross.shot', name: 'safecsv', version: versionMap['safecsv']
-  //compile group: 'edu.harvard.chs', name : 'greekutils' , version: versionMap['greekutils']
-  //compile group:       'org.homermultitext', name : 'hmt-utils', version: versionMap["hmtutils"]
 
 
   testCompile 'junit:junit:4.11'

@@ -21,7 +21,7 @@ project.ext {
 
       "cite" : "3.+",
       "hocuspocus" : "2.+",
-      "prestochango" : "1.+",
+      "prestochango" : "2.+",
 
       "abracadabra" : "0.3.0",
       "nysi" : "0.2.4"
