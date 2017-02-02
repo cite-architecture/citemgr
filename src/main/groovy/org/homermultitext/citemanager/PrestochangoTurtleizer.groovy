@@ -16,7 +16,7 @@ class PrestochangoTurtleizer {
 
 
     /** Directory with collection data in delimited text files. */
-    File dataDirectory 
+    File dataDirectory
 
 
     /** */
@@ -49,17 +49,17 @@ class PrestochangoTurtleizer {
     }
 
 
-  /** 
+  /**
    * main() method expects five arguments: a Collection inventory, a
    * Collection inventory schema, a writable output file name,
    * a directory where the defined index files are to be found, and a
    * boolean flag indicating whether or not to include TTL prefix statements.
    */
-  public static void main(String[] args) 
+  public static void main(String[] args)
   throws Exception {
 
     switch (args.size()) {
-      
+
     case 0:
     throw new Exception("main method requires four or five parameters.")
     System.exit(-1)
@@ -97,12 +97,12 @@ class PrestochangoTurtleizer {
 
       PrestochangoTurtleizer pcttl = new PrestochangoTurtleizer(inv, invSchema, dataDir, outDir, prefix)
       pcttl.generateTurtle()
-      
+
     } catch (Exception e) {
       throw e
     }
     break
-	    
+
     default:
     throw new Exception("main method requires five parameters.")
     System.exit(-1)
@@ -110,12 +110,12 @@ class PrestochangoTurtleizer {
     }
   }
 
-  
+
   /** Writes TTL representation of the CITE Collection archive to the specified
    * output directory.
    */
   void generateTurtle() {
-    CollectionArchive cca 
+    CollectionArchive cca
     try {
       // schema, inventory, base dir
       // turtelizeArchive returns a string
@@ -129,6 +129,15 @@ class PrestochangoTurtleizer {
       throw (e)
     }
     //cc.ttl(turtleOutput, includePrefix)
-    this.turtleOutput.setText(cca.turtleizeArchive())
+    //this.turtleOutput.setText(cca.turtleizeArchive())
+		this.turtleOutput.setText("")
+		this.turtleOutput << cca.prefix
+		this.turtleOutput << cca.ttlExtensionMap()
+		//this.turtleOutput << cca.collections.size()
+    cca.collections.each { c ->
+			System.err.println(c)
+			this.turtleOutput << cca.turtleizeCollection(c)
+			//this.turtleOutput << k
+    }
   }
 }
