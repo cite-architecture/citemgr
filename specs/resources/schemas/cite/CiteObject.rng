@@ -18,7 +18,7 @@
                         name="label"/>
                     <attribute
                         name="type">
-                        <value>citeurn</value>
+                        <value>cite2urn</value>
                     </attribute>
                 </element>
             </oneOrMore>

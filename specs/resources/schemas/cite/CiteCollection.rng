@@ -48,7 +48,7 @@
 				name="label"/>
 			<attribute
 				name="type">
-				<value>citeurn</value>
+				<value>cite2urn</value>
 			</attribute>
 			<optional>
 				<attribute
@@ -157,7 +157,11 @@
 		<optional>
 			<element
 				name="dc:description">
-				<text/>
+				<data
+					type="string">
+					<param
+						name="pattern">.+</param>
+				</data>
 			</element>
 		</optional>
 		<optional>
@@ -185,7 +189,7 @@
 				<data
 					type="string">
 					<param
-						name="pattern">urn:cite:.+:.+</param>
+						name="pattern">urn:cite2:.+:[^.]+\.[^.:]+:.*</param>
 				</data>
 			</attribute>
 			<element
